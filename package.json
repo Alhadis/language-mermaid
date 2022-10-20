@@ -1,0 +1,15 @@
+{
+	"name": "language-mermaid",
+	"version": "v0.0.0",
+	"description": "Syntax highlighting for Mermaid diagrams.",
+	"repository": "https://github.com/Alhadis/language-mermaid",
+	"author": "John Gardner <gardnerjohng@gmail.com>",
+	"license": "ISC",
+	"keywords": [
+		"mermaid",
+		"graph",
+		"chart",
+		"flowchart"
+	],
+	"engines": {"atom": "*"}
+}
