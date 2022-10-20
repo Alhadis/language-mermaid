@@ -1,0 +1,180 @@
+flowchart LR
+	%% Node types
+	square[Square]
+	doublecircle(((Double-circle)))
+	circle((Circle))
+	ellipse(-Ellipse-)
+	stadium([Stadium])
+	subroutine[[Subroutine]]
+	rect[|key:value|Rectangle with preassigned property|]
+	cylinder[(Cylinder)]
+	round(Rounded rectangle)
+	diamond{Diamond}
+	hexagon{{Hexagon}}
+	odd>Asymmetrical shape]
+	trapezoid[/Trapezoid\]
+	inv_trapezoid[\Inverted trapezoid/]
+	lean_right[/Parallelogram, swept right/]
+	lean_left[\Parallelogram, swept left\]
+
+	%% Quoting
+	shorthand %% ID === Text
+	box[Sharp edges, unquoted]
+	box["Sharp edges", quoted]
+	round(Round edges, unquoted)
+	round("Round edges", quoted)
+	stadium([Stadium-shaped node, unquoted])
+	stadium(["Stadium-shaped node", quoted])
+	subroutine[[Subroutine node, unquoted]]
+	subroutine[["Subroutine node", quoted]]
+	rect[|key:value|VERTEX_WITH_PROPS_START, unquoted|]
+	rect[|key:value|"VERTEX_WITH_PROPS_START", quoted|]
+	cylinder[(Cylindrical node, unquoted)]
+	cylinder[("Cylindrical node", quoted)]
+	circle((Circular node, unquoted))
+	circle(("Circular node", quoted))
+	double-circle(((Double-edged circle, unquoted)))
+	double-circle((("Double-edged circle", quoted)))
+	diamond{Diamantine node, unquoted}
+	diamond{"Diamantine node", quoted}
+	ribbon>Weird-ass ribbon-like node, unquoted]
+	ribbon>"Weird-ass ribbon-like" node, quoted]
+	hexagon{{Hexagonal node, unquoted}}
+	hexagon{{"Hexagonal node", quoted}}
+	trapezoid[/Upright trapezoid, unquoted\]
+	trapezoid[/"Upright trapezoid", quoted\]
+	trapezoid[\Inverted trapezoid, unquoted/]
+	trapezoid[\"Inverted trapezoid", quoted/]
+	tongue-twister[\Left-facing parallelogram, unquoted\]
+	tongue-twister[\"Left-facing parallelogram", quoted\]
+	tongue-twister[/Right-facing parallelogram, unquoted/]
+	tongue-twister[/"Right-facing parallelogram", quoted/]
+	
+	%% Entities
+	box[#34;Double-quoted text#34;]
+	box[#quot;Double-quoted text#quot;]
+	
+	%% Interrupted nodes
+	box[Sharp edges
+	box["Sharp edges
+	round(Round edges
+	round("Round edges
+	diamond{Diamantine node
+	diamond{"Diamantine node
+	ribbon>Weird-ass ribbon-like node
+	ribbon>"Weird-ass ribbon-like node
+	stadium([Stadium-shaped node,] ) unquoted
+	stadium(["Stadium-shaped node",] ) quoted
+	subroutine[[Subroutine node,] ] unquoted
+	subroutine[["Subroutine node",] ] quoted
+	rect[|key:value|VERTEX_WITH_PROPS_START,| ] unquoted
+	rect[|key:value|"VERTEX_WITH_PROPS_START",| ] quoted
+	cylinder[(Cylindrical node,) ] unquoted
+	cylinder[("Cylindrical node",) ] quoted
+	circle((Circular node,) unquoted
+	circle(("Circular node",) quoted
+	double-circle(((Double-edged circle,)) unquoted
+	double-circle((("Double-edged circle",)) quoted
+	hexagon{{Hexagonal node,} unquoted
+	hexagon{{"Hexagonal node",} quoted
+	trapezoid[/Upright trapezoid,\/ ] unquoted
+	trapezoid[/"Upright trapezoid",\/ ] quoted
+	trapezoid[\Inverted trapezoid/\ ], unquoted
+	trapezoid[\"Inverted trapezoid"/\ ], quoted
+	tongue-twister[\Left-facing parallelogram,\/ ] unquoted
+	tongue-twister[\"Left-facing parallelogram",\/ ] quoted
+	tongue-twister[/Right-facing parallelogram,/\ ] unquoted
+	tongue-twister[/"Right-facing parallelogram",/\ ] quoted
+
+	%% Accessibility options
+	accTitle : Title of graph
+	accDescr : Example of single-line flowchart description.
+	accDescr
+	{
+		Example of
+		multi-line
+		flowchart
+		description.
+	}
+
+	%% Inline styling
+	id1(One)   --> id2(Two)
+	id3(Three) --> id2(One)
+	style id1 fill:#f9f,stroke:#333,stroke-width:4px
+	style id2 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
+	linkStyle 0,1 interpolate stepBefore stroke:#ff3,stroke-width:4px,color:red;
+	classDef className fill:#f9f,stroke:#333,stroke-width:4px;
+	class id1,id2 className;
+
+	%% Interactivity
+	click nodeID call fn
+	click nodeID call fn "tooltip"
+	click nodeID call fn(arg1, arg2)
+	click nodeID call fn(arg1, arg2) "tooltip"
+	click nodeID href
+	click nodeID href "https://target.url/"
+	click nodeID href "https://target.url/" _target
+	click nodeID href                       _target
+	click nodeID fn
+	click nodeID fn "tooltip"
+	click nodeID "https://target.url/"
+	click nodeID "https://target.url/" "tooltip"
+	click nodeID "https://target.url/" "tooltip" _target
+	click nodeID "https://target.url/"           _target
+
+	%% Links
+	A --- B; A --> B; A --o B; A --x B; A <--> B; A x--x B; A o--o B;
+	A === B; A ==> B; A ==o B; A ==x B; A <==> B; A x==x B; A o==o B;
+	A -..-B; A -.->B; A -.-oB; A -.-xB; A <-.->B; A x-.-xB; A o-.-oB;
+	
+	A -- Text --- B; A  ---| Text | B
+	A -- Text --> B; A  -->| Text | B
+	A -. Text .-> B; A -.->| Text | B
+	
+	A == Text ==> B
+	A -- One --> B -- Two --> C
+	a --> b & c --> d
+	A & B --> C & D
+	
+	%% Chained statements
+	A== Text ==> B
+	A-- One --> B -- Two --> C
+	a-->b & c-->d
+	A[Alpha] --> B[Beta] & G[Gamma] --> D[Delta]
+	&A[For some reason,] --> &[these IDs are legal] & C& -->&
+
+	A[Hard] -->|Text| B(Round)
+	B --> C{Decision}
+	C -->|One| D[Result 1]
+	C -->|Two| E[Result 2]
+
+	%% Subgraphs
+	subgraph foo[Foo]
+		a1 ---> a2
+	end
+	subgraph bar[Bar]
+		a1 ---> a2
+	end
+	subgraph baz;
+		b1 --> b2
+	end
+	subgraph;
+		c1 --> c3
+	end
+	subgraph id1 [Bar]; a1 --> a2; end
+	subgraph id2;       b1 --> b2; end
+	subgraph;           c1 --> c3; end
+
+	subgraph TOP
+		direction TB
+		subgraph B1
+			direction RL
+			i1 -->f1
+		end
+		subgraph B2
+			direction BT
+			i2 -->f2
+		end
+	end
+	A --> TOP --> B
+	B1 --> B2
