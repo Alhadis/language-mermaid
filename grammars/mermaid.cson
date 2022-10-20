@@ -9,6 +9,7 @@ repository:
 			{include: "#directive"}
 			{include: "#comment"}
 			{include: "#flowchart"}
+			{include: "#sequence-diagram"}
 		]
 
 
@@ -123,6 +124,16 @@ repository:
 			captures:
 				1: name: "constant.language.orientation.flowchart.mermaid"
 		}, include: "source.mermaid.flowchart"]
+
+
+	# Sequence diagram
+	"sequence-diagram":
+		name:  "meta.sequence-diagram.mermaid"
+		begin: "(?i)^[ \\t]*(sequenceDiagram)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.sequence-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.sequence-diagram"]
 
 
 	# Statement terminator

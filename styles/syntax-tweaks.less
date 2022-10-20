@@ -1,6 +1,7 @@
 // Theme-specific highlighting tweaks
 
 .theme-seti-syntax .syntax--source.syntax--mermaid{
+	// Flowcharts
 	.syntax--entity.syntax--name.syntax--tag{
 		color: #cbcb41;
 	}
@@ -35,6 +36,15 @@
 		}
 		.syntax--punctuation.syntax--definition.syntax--parameters{
 			color: #4d5a5e;
+		}
+	}
+	
+	// Sequence diagrams
+	.syntax--meta.syntax--signal{
+		.syntax--keyword.syntax--operator.syntax--activate,
+		.syntax--keyword.syntax--operator.syntax--deactivate{
+			color: #4d5a5e;
+			font-variant-ligatures: none;
 		}
 	}
 }

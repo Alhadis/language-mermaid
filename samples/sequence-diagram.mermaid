@@ -1,0 +1,113 @@
+sequenceDiagram
+	autonumber
+
+	Alice->>John: Hello John, how are you?
+	John-->>Alice: I'm shit, fuck off.
+	Alice-)John: See you later!
+
+	%% Participants
+	participant Alice
+	participant Bob
+	Alice->>Bob: Hi Bob
+	Bob->>Alice: Hi Alice
+
+	%% Actors
+	actor Alice
+	actor Bob
+	Alice->>Bob: Hi Bob
+	Bob->>Alice: Hi Alice
+	
+	%% Aliases
+	participant A as Alice
+	participant J as John
+	A->>J: Hello John, how are you?
+	J->>A: Great!
+
+	%% Activations
+	Alice->>John: Hello John, how are you?
+	activate John
+	John-->>Alice: Great!
+	deactivate John
+
+	Alice->>+John: Hello John, how are you?
+	John-->>-Alice: Great!
+	Alice ->> + John: Hello John, how are you?
+	John -->> - Alice: Great!
+
+	%% Notes
+	Note right of John: Text in note
+	Note over Alice,John: A typical interaction
+
+	%% Loops
+	Loop Every minute
+	    John-->Alice: Consciousness = pain
+	End
+
+	%% Alternation
+	alt If sick
+		Bob->>Alice: Not so good :(
+	else If well
+		Bob->>Alice: Feeling fresh like a daisy
+	end
+
+	Opt Afterthought
+		Bob->>Alice: Thanks for asking
+	End
+
+
+	%% Parallel actions
+	par Alice to Bob
+		Alice->>Bob: Go help John
+	and Alice to John
+		Alice->>John: I want this done today
+		par John to Charlie
+			John->>Charlie: Can we do this today?
+		and John to Diana
+			John->>Diana: Can you help us today?
+		end
+	end
+
+
+	%% Required actions
+	critical Establish a connection to the DB
+		Service-->DB: connect
+	option Network timeout
+		Service-->Service: Log error
+	option Credentials rejected
+		Service-->Service: Log different error
+	end
+
+	critical Establish a connection to the DB
+		Service-->DB: connect
+	end
+
+	%% Sequence termination
+	break after 10 years of trauma
+		John->>World: I quit life.
+	end
+
+	%% Coloured rectangles, whoooo
+	participant Alice
+	participant John
+
+	rect rgb(191, 223, 255)
+		note right of Alice: Alice calls John.
+		Alice->>+John: Hello John, how are you?
+		rect rgb(200, 150, 255)
+			Alice->>+John: John, can you hear me?
+			John-->>-Alice: Hi Alice, I can hear you!
+		end
+		John-->>-Alice: I feel great!
+	end
+
+	%% Entities
+	A->>B: I #9829; you!
+	B->>A: I #9829; you #infin; times more!
+
+	%% Menus
+	link Alice: Dashboard @ https://dashboard.contoso.com/alice
+	link Alice: Wiki @ https://wiki.contoso.com/alice
+	link John: Dashboard @ https://dashboard.contoso.com/john
+	link John: Wiki @ https://wiki.contoso.com/john
+	links Alice: {"Dashboard": "https://dashboard.contoso.com/alice", "Wiki": "https://wiki.contoso.com/alice"}
+	links John: {"Dashboard": "https://dashboard.contoso.com/john", "Wiki": "https://wiki.contoso.com/john"}

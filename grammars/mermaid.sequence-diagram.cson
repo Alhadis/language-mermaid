@@ -1,0 +1,329 @@
+hideFromUser: yes
+scopeName: "source.mermaid.sequence-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#terminator"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#message"}
+			{include: "#autonumber"}
+			{include: "#activation"}
+			{include: "#actor"}
+			{include: "#note"}
+			{include: "#loop"}
+			{include: "#alt"}
+			{include: "#opt"}
+			{include: "#par"}
+			{include: "#critical"}
+			{include: "#break"}
+			{include: "#rect"}
+			{include: "#menu"}
+			{include: "#name"}
+			{include: "#signal"}
+		]
+
+
+	# Longhand (de)activation
+	activation:
+		name: "keyword.operator.${1:/downcase}.mermaid"
+		match: "(?i)(?:\\G|^|(?<=\\s|;|%%))((?:de)?activate)(?=$|\\s|;)"
+
+
+	# Explicitly-defined actor or participant
+	actor:
+		name:  "meta.definition.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))(actor|participant)(?=$|\\s|;)[ \\t]*"
+		end:   "(?!\\G)|(?=\\s*(?:$|;))"
+		beginCaptures:
+			1: name: "storage.modifier.${1:/downcase}.mermaid"
+		patterns: [include: "#name"]
+
+
+	# Alternation: “alt … else … end”
+	alt:
+		name:  "meta.alternation.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(alt)(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(end)(?=$|\\s|;)"
+		beginCaptures: 1: name: "keyword.control.flow.alternation.begin.mermaid"
+		endCaptures:   1: name: "keyword.control.flow.alternation.end.mermaid"
+		patterns: [{
+			# Alt [predicate-text] …
+			name:  "meta.branch.if.mermaid"
+			begin: "\\G"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*(?:end|else)(?:$|\\s|;))"
+			patterns: [include: "#alt-innards"]
+		},{
+			# Else [predicate-text] …
+			name:  "meta.branch.else.mermaid"
+			begin: "(?i)(?:^|(?<=\\s|;|%%))\\s*(else)(?=$|\\s|;)"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*end(?:$|\\s|;))"
+			beginCaptures:
+				1: name: "keyword.control.flow.alternation.else.mermaid"
+			patterns: [include: "#alt-innards"]
+		}]
+
+
+	# Stuff matched inside an alternation or optional branch
+	"alt-innards":
+		patterns: [{
+			# Remainder of line after “alt” or “else” keyword
+			contentName: "string.unquoted.condition-text.mermaid"
+			begin: "\\G[ \\t]*(?=\\S)"
+			end:   "(?=\\s*(?:$|;))"
+			patterns: [include: "#string-innards"]
+		}, include: "#main"]
+
+
+	# Enable auto-numbered signals
+	autonumber:
+		name: "keyword.operator.autonumber.mermaid"
+		match: "(?i)(?:\\G|^|(?<=\\s|;|%%))autonumber(?=$|\\s|;)"
+
+
+	# Premature termination of sequence
+	break:
+		name:  "meta.break.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))break(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))end(?=$|\\s|;)"
+		beginCaptures: 0: name: "keyword.control.flow.break.begin.mermaid"
+		endCaptures:   0: name: "keyword.control.flow.break.end.mermaid"
+		patterns: [{
+			contentName: "string.unquoted.break-text.mermaid"
+			begin: "\\G[ \\t]*(?=\\S)"
+			end:   "(?=\\s*(?:$|;))"
+			patterns: [include: "#string-innards"]
+		}, include: "#main"]
+
+
+	# Actions marked as required: “critical [action-text] … optional [text] … end”
+	critical:
+		name:  "meta.requirements.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(critical)(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(end)(?=$|\\s|;)"
+		beginCaptures: 1: name: "keyword.control.flow.requirements.begin.mermaid"
+		endCaptures:   1: name: "keyword.control.flow.requirements.end.mermaid"
+		patterns: [{
+			# First branch
+			name:  "meta.branch.required.first.mermaid"
+			begin: "\\G"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*(?:option|end)(?:$|\\s|;))"
+			patterns: [include: "#alt-innards"]
+		},{
+			# Additional branch(es)
+			name:  "meta.branch.required.rest.mermaid"
+			begin: "(?i)(?:^|(?<=\\s|;|%%))\\s*(option)(?=$|\\s|;)"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*(?:option|end)(?:$|\\s|;))"
+			beginCaptures:
+				1: name: "keyword.control.flow.option.mermaid"
+			patterns: [include: "#alt-innards"]
+		}]
+
+
+	# Loop block
+	loop:
+		name:  "meta.loop.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))loop(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))end(?=$|\\s|;)"
+		beginCaptures: 0: name: "keyword.control.loop.begin.mermaid"
+		endCaptures:   0: name: "keyword.control.loop.end.mermaid"
+		patterns: [{
+			contentName: "string.unquoted.loop-text.mermaid"
+			begin: "\\G[ \\t]*(?=\\S)"
+			end:   "(?=\\s*(?:$|;))"
+			patterns: [include: "#string-innards"]
+		}, include: "#main"]
+
+
+	# Popup menu link(s)
+	menu:
+		patterns: [
+			{include: "#menu-single"}
+			{include: "#menu-json"}
+		]
+
+
+	# Single link: “link name: Text @ http://url/”
+	"menu-single":
+		name:  "meta.menu-link.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))link(?=$|\\s|;)"
+		end:   "(?=\\s*(?:$|;))"
+		beginCaptures:
+			0: name: "storage.type.menu-link.mermaid"
+		patterns: [{
+			applyEndPatternLast: yes
+			name:  "meta.lhs.mermaid"
+			begin: "\\G"
+			end:   "(?!\\G)"
+			patterns: [include: "#name"]
+		},{
+			# …: Text @ http://url
+			applyEndPatternLast: yes
+			name:  "meta.rhs.mermaid"
+			begin: ":"
+			end:   "(?!\\G)"
+			beginCaptures:
+				0: name: "keyword.operator.assignment.mermaid"
+				1: name: "punctuation.separator.link.key-value.mermaid"
+			patterns: [{
+				# Link text
+				name:  "meta.link-text.mermaid"
+				match: "\\G\\s*([^;@]*)\\s*((@))"
+				captures:
+					1: name: "string.unquoted.link-text.mermaid", patterns: [include: "#string-innards"]
+					2: name: "keyword.operator.assignment.mermaid"
+					3: name: "punctuation.separator.link-spec.mermaid"
+			},{
+				# URL
+				name:  "meta.link-target.mermaid"
+				begin: "(?:(?<=@)|(?<=:)\\G)[ \\t]*(?![^;]*@)"
+				end:   "(?=\\s*(?:$|;))"
+				contentName: "constant.other.reference.link.mermaid"
+				patterns: [include: "#string-innards"]
+			}]
+		}]
+
+
+	# Entire menu specified as JSON
+	"menu-json":
+		name:  "meta.menu.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))links(?=$|\\s|;)"
+		end:   "(?=\\s*(?:$|;))"
+		beginCaptures:
+			0: name: "storage.type.menu.mermaid"
+		patterns: [{
+			applyEndPatternLast: yes
+			name:  "meta.lhs.mermaid"
+			begin: "\\G"
+			end:   "(?!\\G)"
+			patterns: [include: "#name"]
+		},{
+			applyEndPatternLast: yes
+			begin: ":[ \\t]*"
+			end:   "(?!\\G)"
+			beginCaptures:
+				0: name: "keyword.operator.assignment.mermaid"
+				1: name: "punctuation.separator.menu.key-value.mermaid"
+			patterns: [include: "source.json"]
+		}]
+
+
+	# Message text
+	message:
+		name:  "meta.message.mermaid"
+		begin: "((:))[ \\t]*"
+		end:   "(?=[ \\t]*(?:$|;))"
+		beginCaptures:
+			1: name: "keyword.operator.assignment.mermaid"
+			2: name: "punctuation.separator.message.key-value.mermaid"
+		contentName: "string.unquoted.message-text.mermaid"
+		patterns: [include: "#string-innards"]
+
+
+	# Actor or participant name
+	name:
+		name: "meta.name.mermaid"
+		match: """(?ix)
+			(
+				(?=\\S)
+				(?:[^-+>:,;\\s]+|\\s+(?!as(?:$|\\s)))++
+				(?:
+					(?!--?[x\\x29])
+					(?:-*[^-+>:,;\\s]+|\\s+(?!as(?:$|\\s)))
+				)*?
+			)
+			(?:\\s+(as)(?=$|\\s|;))?
+		"""
+		captures:
+			1: name: "entity.name.tag.actor.mermaid"
+			2: name: "keyword.operator.alias.mermaid"
+
+
+	# Sidenotes
+	note:
+		applyEndPatternLast: yes
+		name:  "meta.note.mermaid"
+		begin: "(?i)note\\s+(?:(?:left|right)\\s+of|over)(?=$|\\s)[ \\t]*"
+		end:   "(?!\\G)|(?=\\s*(?:$|;))"
+		beginCaptures:
+			0: name: "storage.type.note.mermaid"
+		patterns: [
+			{include: "#name"}
+			{include: "source.mermaid#comma"}
+		]
+
+
+	# Optional path (single-branch form of “#alt”)
+	opt:
+		name:  "meta.option.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(opt)(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(end)(?=$|\\s|;)"
+		beginCaptures: 1: name: "keyword.control.flow.option.begin.mermaid"
+		endCaptures:   1: name: "keyword.control.flow.option.end.mermaid"
+		patterns: [include: "#alt-innards"]
+
+
+	# Parallel action(s)
+	par:
+		name:  "meta.parallel.block.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(par)(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(end)(?=$|\\s|;)"
+		beginCaptures: 1: name: "keyword.control.flow.parallel.begin.mermaid"
+		endCaptures:   1: name: "keyword.control.flow.parallel.end.mermaid"
+		patterns: [{
+			# First branch
+			name:  "meta.branch.parallel.first.mermaid"
+			begin: "\\G"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*(?:and|end)(?:$|\\s|;))"
+			patterns: [include: "#alt-innards"]
+		},{
+			# Additional branch(es)
+			name:  "meta.branch.parallel.rest.mermaid"
+			begin: "(?i)(?:^|(?<=\\s|;|%%))\\s*(and)(?=$|\\s|;)"
+			end:   "(?i)(?=(?:^|(?<=\\s|;|%%))\\s*(?:and|end)(?:$|\\s|;))"
+			beginCaptures:
+				1: name: "keyword.control.flow.parallel.continue.mermaid"
+			patterns: [include: "#alt-innards"]
+		}]
+
+
+	# Coloured rectangle
+	rect:
+		name:  "meta.rectangle.mermaid"
+		begin: "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(rect)(?=$|\\s|;)"
+		end:   "(?i)(?:\\G|^|(?<=\\s|;|%%))\\s*(end)(?=$|\\s|;)"
+		beginCaptures: 0: name: "keyword.control.rectangle.begin.mermaid"
+		endCaptures:   0: name: "keyword.control.rectangle.end.mermaid"
+		patterns: [{
+			name:  "meta.function.background-colour.${1:/downcase}.mermaid"
+			begin: "(?i)\\G\\s*(rgba?)(\\()"
+			end:   "\\)"
+			beginCaptures:
+				1: name: "support.function.colour.mermaid"
+				2: name: "punctuation.definition.arguments.begin.mermaid"
+			endCaptures:
+				0: name: "punctuation.definition.arguments.end.mermaid"
+			patterns: [{
+				# Colour component, expressed as either an integer or float
+				name: "constant.numeric.colour-component.mermaid"
+				match: "[-+]?\\d+(?:\\.\\d+)?"
+			}, include: "source.mermaid#comma"]
+		}, include: "#main"]
+
+
+	# Line/arrow linking one name to another
+	signal:
+		name: "meta.signal.mermaid"
+		match: "(--?(?:>>?|x|\\)))(?:[ \\t]*(?:(-)|(\\+)))?"
+		captures:
+			1: name: "keyword.operator.link.mermaid"
+			2: name: "keyword.operator.deactivate.mermaid"
+			3: name: "keyword.operator.activate.mermaid"
+
+
+	# Pattern(s) matched inside user-visible text
+	"string-innards":
+		patterns: [include: "source.mermaid#entity"]
