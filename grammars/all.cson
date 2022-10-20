@@ -1,3 +1,4 @@
+# Grammar's entry-point
 name: "Mermaid"
 scopeName: "source.mermaid"
 fileTypes: ["mmd", "mermaid"]
