@@ -1,0 +1,3 @@
+# Fix language classification on GitHub.com
+/samples/* linguist-documentation
+*.cson     linguist-detectable
