@@ -1,0 +1,21 @@
+.DS_Store
+Thumbs.db
+coverage
+Desktop.ini
+node_modules
+package-lock.json
+yarn.lock
+.nyc_output
+._*
+.\#*
+\#*\#
+*~
+*.log
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+/test.*
+
+# Project-specific
+/mermaid
