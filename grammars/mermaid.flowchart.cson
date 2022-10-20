@@ -1,0 +1,483 @@
+# Flowchart: https://mermaid-js.github.io/mermaid/#/flowchart
+hideFromUser: yes
+scopeName: "source.mermaid.flowchart"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "#style"}
+			{include: "#class"}
+			{include: "#click"}
+			{include: "#link"}
+			{include: "#subgraph"}
+			{include: "#node"}
+			{include: "source.mermaid#terminator"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+		]
+
+
+	# CSS class assignment
+	class:
+		name:  "meta.class.statement.mermaid"
+		begin: "(?:\\G|^|(?<=\\s|;|%%))class(?=$|\\s|;)"
+		end:   "([\\w$&]+)?[ \\t]*(?=$|;)"
+		beginCaptures:
+			0: name: "storage.type.style-assignment.mermaid"
+		endCaptures:
+			1: name: "entity.name.class.mermaid"
+		patterns: [{
+			name: "entity.name.tag.node.mermaid"
+			match: "([\\w$&]+)(?=$|\\s|;|,)"
+		}, include: "#comma"]
+
+
+	# Interactivity command: “click <node-ID> …”
+	click:
+		name:  "meta.click.statement.mermaid"
+		begin: "(?:\\G|^|(?<=\\s|;|%%))(click)(?=$|\\s|;)(?:\\s+([\\w$&]+))?"
+		end:   "[ \\t]*$|(?=;)"
+		beginCaptures:
+			1: name: "storage.type.interactive-command.mermaid"
+			2: name: "entity.name.tag.node.mermaid"
+		patterns: [
+			{include: "#click-href"}
+			{include: "#click-call"}
+		]
+
+
+	# Callback assignment: “… call <function> "<optional-tooltip>"”
+	"click-call":
+		name:  "meta.callback-assignment.mermaid"
+		begin: "\\G\\s+(?:(call)(?=$|\\s|;)[ \\t]*|(?=[^\\s\\(%;\"']))"
+		end:   "[ \\t]*$|(?=;)"
+		beginCaptures:
+			1: name: "storage.modifier.callback-assignment.mermaid"
+		patterns: [{
+			# Callback name and optional arguments
+			name:  "meta.callback-reference.mermaid"
+			begin: "\\G[^\\s\\(%;\"']+"
+			end:   "(?!\\G)|(?=[ \\t]*(?:$|;))"
+			beginCaptures:
+				0: name: "entity.name.function.callback.mermaid"
+			patterns: [{
+				# Optional (possibly empty) argument-list
+				name:  "meta.callback-arguments.mermaid"
+				begin: "\\G\\("
+				end:   "\\)"
+				beginCaptures: 0: name: "punctuation.definition.parameters.begin.mermaid"
+				endCaptures:   0: name: "punctuation.definition.parameters.end.mermaid"
+				patterns: [{
+					name:  "variable.parameter.function.mermaid"
+					match: "[^\\s,\\)%;]+"
+				}, include: "#comma"]
+			}]
+		}, include: "#tooltip"]
+
+
+	# Link destination: “… href "http://url/" _target”
+	"click-href":
+		name:  "meta.link-assignment.mermaid"
+		begin: "\\G\\s+(?:(href)(?=$|\\s|;)[ \\t]*|(?=[\"']))"
+		end:   "[ \\t]*$|(?=;)"
+		beginCaptures:
+			1: name: "storage.modifier.link-assignment.mermaid"
+		patterns: [
+			begin: "\\G(?=\"|')"
+			end:   "(?!\\G)"
+			patterns: [include: "#url"]
+
+			{include: "#tooltip"}
+			{include: "#target-name"}
+		]
+
+
+	# Line/arrow connecting two nodes
+	link:
+		patterns: [{
+			# Alternative syntax for line/arrow with text: “---| Text |”
+			name:  "meta.labelled-link.delimited.mermaid"
+			begin: "([xo<]?(?:--+[-xo>]|==+[=xo>]|-?\\.+-[xo>]?))\\s*(\\|)[ \\t]*"
+			end:   "\\s*(\\|)"
+			beginCaptures:
+				1: patterns: [include: "#link"]
+				2: name: "keyword.operator.link-label.begin.mermaid"
+			endCaptures:
+				1: name: "keyword.operator.link-label.end.mermaid"
+			contentName: "string.quoted.other.link-label.mermaid"
+		},{
+			# Thin line: “A --- B”
+			name: "keyword.operator.link.thin.mermaid"
+			match: "[xo<]?--+[-xo>]"
+		},{
+			# Thick line: “A === B”
+			name: "keyword.operator.link.thick.mermaid"
+			match: "[xo<]?==+[=xo>]"
+		},{
+			# Dotted line: “A -..- B”
+			name: "keyword.operator.link.dotted.mermaid"
+			match: "[xo<]?-?\\.+-[xo>]?"
+		},{
+			# Thin line with text: “A -- Text -- B”
+			name:  "meta.labelled-link.mermaid"
+			begin: "([xo<]?--)[ \\t]*"
+			end:   "\\s*([xo<]?--+[-xo>])"
+			beginCaptures: 1: name: "keyword.operator.link.thin.begin.mermaid"
+			endCaptures:   1: name: "keyword.operator.link.thin.end.mermaid"
+			contentName: "string.unquoted.link-label.mermaid"
+		},{
+			# Thick line with text: “A == Text == B”
+			name:  "meta.link.thick.labelled.unpiped.mermaid"
+			begin: "([xo<]?==)[ \\t]*"
+			end:   "\\s*([xo<]?==+[=xo>])"
+			beginCaptures: 1: name: "keyword.operator.link.thick.begin.mermaid"
+			endCaptures:   1: name: "keyword.operator.link.thick.end.mermaid"
+			contentName: "string.unquoted.link-label.mermaid"
+		},{
+			# Dotted line with text: “A == Text == B”
+			name:  "meta.link.dotted.labelled.unpiped.mermaid"
+			begin: "([xo<]?-\\.)[ \\t]*"
+			end:   "\\s*([xo<]?-?\\.+-[xo>]?)"
+			beginCaptures: 1: name: "keyword.operator.link.dotted.begin.mermaid"
+			endCaptures:   1: name: "keyword.operator.link.dotted.end.mermaid"
+			contentName: "string.unquoted.link-label.mermaid"
+		}]
+
+
+	# Link target; analoguous to “HTMLAnchorElement.prototype.target”
+	"target-name":
+		name:  "constant.language.link-target.mermaid"
+		match: "(?<=\\s|;|%%)(_)[-\\w]+(?=$|\\s|;|%%)"
+		captures:
+			1: name: "punctuation.definition.link-target.mermaid"
+
+
+	# Flowchart node
+	node:
+		name:  "meta.node.statement.mermaid"
+		begin: "[\\w$&]+"
+		end:   "(?!\\G)|(?=\\s*(?:$|;))"
+		applyEndPatternLast: yes
+		beginCaptures:
+			0: name: "entity.name.tag.node.mermaid"
+		patterns: [{
+			# [/Trapezoid\] or [/Parallelogram/]
+			name:  "string.unquoted.node-text.polygon.mermaid"
+			begin: "\\G(\\[[/\\\\])"
+			end:   "(([\\\\/]\\]))|((?:[^\\r\\n\\]]|(?<![\\\\/])\\])++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# ([Stadium])
+			name:  "string.unquoted.node-text.stadium.mermaid"
+			begin: "\\G(\\(\\[)"
+			end:   "((\\]\\)))|((?:[^\\r\\n)]|(?<!\\])\\))++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# [(Cylinder)]
+			name:  "string.unquoted.node-text.cylinder.mermaid"
+			begin: "\\G(\\[\\()"
+			end:   "((\\)\\]))|((?:[^\\r\\n)]|\\)(?!\\]))++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# [[Subroutine]]
+			name:  "string.unquoted.node-text.subroutine.mermaid"
+			begin: "\\G(\\[\\[)"
+			end:   "((\\]\\]))|((?:[^\\r\\n\\]]|(?<!\\])\\])++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# [|key:value|Rectangle with preassigned property|]
+			# NOTE: This doesn't appear to be documented as of mermaid-js/mermaid@f1fa91a
+			name:  "string.unquoted.node-text.rectangle-with-props.mermaid"
+			begin: "\\G((\\[\\|))([A-Za-z]+)((:))([A-Za-z]+)((\\|))(?!\\])"
+			end:   "((\\|\\]))|((?:[^\\r\\n\\]]|(?<!\\|)\\])++)$"
+			beginCaptures:
+				1: name: "punctuation.definition.string.begin.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "entity.other.attribute-name.class.mermaid"
+				4: name: "punctuation.separator.key-value.colon.mermaid"
+				5: name: "sublimelinter.gutter-mark.mermaid"
+				6: name: "constant.other.attribute-value.mermaid"
+				7: name: "punctuation.separator.pipe.mermaid"
+				8: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# [Square/rectangle]
+			name:  "string.unquoted.node-text.square.mermaid"
+			begin: "\\G(\\[)"
+			end:   "((\\]))|([^\\r\\n\\]]+)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# (((Double circle)))
+			name:  "string.unquoted.node-text.double-circle.mermaid"
+			begin: "\\G(\\({3})"
+			end:   "((\\){3}))|((?:[^\\r\\n)]|(?<!\\)\\))\\))++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# ((Circle))
+			name:  "string.unquoted.node-text.circle.mermaid"
+			begin: "\\G(\\({2})"
+			end:   "((\\){2}))|((?:(?<!\\))\\)(?!\\))|[^\\r\\n)])++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# (-Ellipse-)
+			name:  "string.unquoted.node-text.ellipse.mermaid"
+			begin: "\\G(\\(-)"
+			end:   "((-\\)))|((?:[^-\\r\\n)]|-(?!\\)))++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# (Rounded rectangle)
+			name:  "string.unquoted.node-text.round.mermaid"
+			begin: "\\G(\\()"
+			end:   "((\\)))|([^\\r\\n)]+)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# {{Hexagon}}
+			name:  "string.unquoted.node-text.hexagon.mermaid"
+			begin: "\\G({{)"
+			end:   "((}}))|((?:[^\\r\\n}]|}(?!}))++)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# {Diamond/rhombus}
+			name:  "string.unquoted.node-text.diamond.mermaid"
+			begin: "\\G({)"
+			end:   "((}))|([^\\r\\n}]+)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# >Ribbon]
+			name:  "string.unquoted.node-text.ribbon.mermaid"
+			begin: "\\G(>)"
+			end:   "((\\]))|([^\\r\\n\\]]+)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+				1: name: "sublimelinter.gutter-mark.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "sublimelinter.gutter-mark.mermaid"
+				3: name: "invalid.illegal.unclosed-string.mermaid", patterns: [include: "#br"]
+			patterns: [include: "#node-innards"]
+		},{
+			# Shorthand for assigning a class-name: “A:::className”
+			match: "(?<=\\S)(:::)(?:(?:(default)|([\\w$&]+))(?:\\b|(?<=[$&])))?"
+			captures:
+				1: name: "keyword.operator.node-class.mermaid"
+				2: name: "constant.language.default-styling.mermaid"
+				3: name: "entity.name.class.mermaid"
+		},{
+			# Combinator, used to chain node declarations: “A-->B & C-->D”
+			match: "\\s+(&)(?:$|[ \\t]+)"
+			captures:
+				1: name: "keyword.operator.logical.and.mermaid"
+		}, include: "#link"]
+
+
+	# Stuff matched inside node labels
+	"node-innards":
+		patterns: [{
+			# "Double-quoted label"
+			name:  "string.quoted.double.mermaid"
+			begin: '\\G"'
+			end:   '(")|([^"]+)$'
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "invalid.illegal.unclosed-string.mermaid"
+			patterns: [include: "#br", {include: "#entity"}]
+		},{
+			# 'Single-quoted label'
+			name:  "string.quoted.single.mermaid"
+			begin: "\\G'"
+			end:   "(')|([^']+)$"
+			beginCaptures:
+				0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "invalid.illegal.unclosed-string.mermaid"
+			patterns: [include: "#br", {include: "#entity"}]
+		}, include: "#br", {include: "#entity"}]
+
+
+	# Inline node styling
+	style:
+		name:  "meta.$1.statement.mermaid"
+		begin: "(?:\\G|^|(?<=\\s|;|%%))(style|classDef|linkStyle)(?=$|\\s|;)"
+		end:   "[ \\t]*$|(?=;)"
+		beginCaptures:
+			0: name: "storage.type.style-definition.mermaid"
+		patterns: [{
+			# ID of recipient node
+			match: "(?<=style)\\G\\s+([\\w$&]+)"
+			captures:
+				1: name: "entity.name.tag.node.mermaid"
+		},{
+			# Class name
+			match: "(?<=classDef)\\G\\s+(?:(default)|([\\w$&]+))(?:\\b|(?<=[$&]))"
+			captures:
+				1: name: "constant.language.default-styling.mermaid"
+				2: name: "entity.name.class.mermaid"
+		},{
+			# Link index
+			match: "(?<=linkStyle)\\G\\s+(?:(default)|([,\\d]+))(?:\\s+(interpolate)\\s+([\\w$&]+))?(?=$|\\s|;)"
+			captures:
+				1: name: "constant.language.default-styling.mermaid"
+				2: name: "meta.link-indexes.mermaid", patterns: [{
+					name: "constant.numeric.integer.link-index.mermaid"
+					match: "\\d+"
+				}, include: "#comma"]
+				3: name: "keyword.operator.interpolation-type.mermaid"
+				4: name: "support.constant.interpolation-type.mermaid"
+		},{
+			# Comma-delimited list of style components
+			name: "source.embedded.css"
+			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
+			captures:
+				0: patterns: [include: "source.css#rule-list-innards"]
+		}, include: "#comma"]
+
+
+	# Nested graph
+	subgraph:
+		name:  "meta.subgraph.mermaid"
+		begin: "(?:\\G|^|(?<=\\s|;|%%))subgraph(?=$|\\s|;)"
+		end:   "(?:\\G|^|(?<=\\s|;|%%))end(?=$|\\s|;)"
+		beginCaptures: 0: name: "keyword.control.subgraph.begin.mermaid"
+		endCaptures:   0: name: "keyword.control.subgraph.end.mermaid"
+		patterns: [{
+			# ID of subgraph
+			begin: "\\G\\s+([\\w$&]+)[ \\t]*"
+			end:   "(?!\\G)|(?=[ \\t]*(?:$|;))"
+			beginCaptures:
+				1: name: "entity.name.subgraph.mermaid"
+			patterns: [{
+				# Optional title, enclosed in square brackets
+				name:  "string.unquoted.subgraph-title.mermaid"
+				begin: "\\G(\\[)"
+				end:   "(\\])"
+				beginCaptures:
+					0: name: "punctuation.definition.string.begin.mermaid"
+					1: name: "sublimelinter.gutter-mark.mermaid"
+				endCaptures:
+					0: name: "punctuation.definition.string.end.mermaid"
+					1: name: "sublimelinter.gutter-mark.mermaid"
+			}]
+		},{
+			# Subgraph orientation
+			name:  "meta.direction.statement.mermaid"
+			match: "(?:\\G|^|(?<=\\s|;|%%))(direction)(?:\\s+(BT|LR|RL|TB|TD))?(?=$|\\s|;)"
+			captures:
+				1: name: "storage.type.direction.mermaid"
+				2: name: "constant.language.orientation.flowchart.mermaid"
+		}, include: "#main"]
+
+
+	# Tooltip for an interactive element, enclosed in double-quotes
+	tooltip:
+		name:  "string.quoted.double.callback-tooltip.mermaid"
+		begin: '"'
+		end:   '"'
+		beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+		endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+
+
+	# Quoted URL
+	url:
+		patterns: [{
+			# "Double-quoted"
+			name:  "string.quoted.double.link-destination.mermaid"
+			begin: '"'
+			end:   '"'
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+			contentName: "string.other.link.mermaid"
+		},{
+			# 'Single-quoted'
+			name:  "string.quoted.single.link-destination.mermaid"
+			begin: "'"
+			end:   "'"
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+			contentName: "string.other.link.mermaid"
+		}]
