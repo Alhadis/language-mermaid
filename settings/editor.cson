@@ -3,7 +3,8 @@
 		commentStart: "%% "
 		increaseIndentPattern: """(?x)
 			(?:^|\\s|;)
-			( flowchart(?:-v2)?
+			( classDiagram (?:-v2)?
+			| flowchart    (?:-v2)?
 			| graph
 			| sequenceDiagram
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)

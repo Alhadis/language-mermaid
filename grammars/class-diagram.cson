@@ -1,0 +1,327 @@
+# Class diagram: https://mermaid-js.github.io/mermaid/#/classDiagram
+hideFromUser: yes
+scopeName: "source.mermaid.class-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "source.mermaid#direction"}
+			{include: "#annotation-statement"}
+			{include: "#relation"}
+			{include: "#class"}
+			{include: "#member-statement"}
+			{include: "#interaction"}
+			{include: "source.mermaid.flowchart#click"}
+		]
+
+
+	# Metadata/auxiliary description of a class
+	annotation:
+		name:  "meta.annotation.mermaid"
+		begin: "(<<)"
+		end:   "(>>)"
+		beginCaptures:
+			0: name: "punctuation.definition.annotation.begin.mermaid"
+			1: name: "sublimelinter.gutter-mark"
+		endCaptures:
+			0: name: "punctuation.definition.annotation.end.mermaid"
+			1: name: "sublimelinter.gutter-mark"
+		contentName: "entity.name.tag.annotation.mermaid"
+
+
+	# Annotation declaration, outside of a class body
+	"annotation-statement":
+		name:  "meta.annotation.statement.mermaid"
+		match: "^\\s*(<<.*?>>)(?:\\s+((?=[a-zA-Z])\\w+)(?=\\s*(?:$|[^{}\\s])))?"
+		captures:
+			1: patterns: [include: "#annotation"]
+			2: name: "entity.name.type.class.mermaid"
+
+
+	# Multiplicity or cardinality. CompSci gibberish for “how many times can X be used?”
+	cardinality:
+		name:  "string.quoted.double.cardinality.mermaid"
+		begin: '"'
+		end:   '"'
+		beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+		endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+		patterns: [
+			{match: "\\*",    name: "constant.language.variable-amount.mermaid"}
+			{match: "\\.\\.", name: "constant.language.range.mermaid"}
+		]
+
+
+	# Separator character that typically delimits freeform text
+	colon:
+		name: "keyword.operator.assignment.mermaid"
+		match: ":"
+		captures:
+			0: name: "punctuation.separator.message.key-value.mermaid"
+
+
+	# Class description
+	class:
+		patterns: [{
+			# Block-form: “class Name { … }”
+			name:  "meta.class.definition.mermaid"
+			begin: """(?x) ^
+				\\s* (class)
+				\\s+ ((?=[a-zA-Z])\\w+)
+				(?:\\s* (~\\w+~))?
+				(?:\\s* (:::) \\s* ([^\\s{}]+))?
+				\\s* (({))
+			"""
+			end: "(})"
+			beginCaptures:
+				1: name: "storage.type.class.mermaid"
+				2: name: "entity.name.type.class.mermaid"
+				3: patterns: [include: "#generic"]
+				4: name: "keyword.operator.css-class.mermaid"
+				5: name: "constant.language.css-class.mermaid"
+				6: name: "punctuation.definition.class.block.begin.mermaid"
+				7: name: "sublimelinter.gutter-mark"
+			endCaptures:
+				0: name: "punctuation.definition.class.block.end.mermaid"
+				1: name: "sublimelinter.gutter-mark"
+			patterns: [
+				{include: "source.mermaid#comment"}
+				{include: "#annotation"}
+				{include: "#member"}
+			]
+		},{
+			# Class declaration
+			name: "meta.class.statement.mermaid"
+			match: """(?x) ^
+				\\s* (class)
+				\\s+ ((?=[a-zA-Z])\\w+(?:\\s+\\S.+?)?)
+				(?: \\s* (~\\w+~))?
+				(?: \\s* (:::) \\s* ([^\\s{}]+))?
+				(?= \\s*)
+			"""
+			captures:
+				1: name: "storage.type.class.mermaid"
+				2: name: "entity.name.type.class.mermaid"
+				3: patterns: [include: "#generic"]
+				4: name: "keyword.operator.css-class.mermaid"
+				5: name: "constant.language.css-class.mermaid"
+		}]
+
+
+	# Member suffix marking method or attribute as such-and-such
+	classifier:
+		patterns: [{
+			# Abstract: *
+			name: "storage.modifier.classifier.abstract.mermaid"
+			match: "\\*"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		},{
+			# Static: $
+			name: "storage.modifier.classifier.static.mermaid"
+			match: "\\$"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		}]
+
+
+	# Generic type annotation following class name: “Foo~String~” ⇒ “Foo<String>”
+	generic:
+		name:  "meta.generic.mermaid"
+		begin: "(?:^|\\G)\\s*((~))"
+		end:   "(~)"
+		beginCaptures:
+			1: name: "punctuation.definition.type.begin.mermaid"
+			2: name: "sublimelinter.gutter-mark"
+		endCaptures:
+			0: name: "punctuation.definition.type.end.mermaid"
+			1: name: "sublimelinter.gutter-mark"
+		contentName: "entity.name.tag.type.mermaid"
+
+
+	# Interactivity handler; compare “source.mermaid.flowchart#click”
+	interaction:
+		name:  "meta.$1-handler.mermaid"
+		begin: "^\\s*(link|callback)(?=$|\\s)"
+		end:   "(?!\\G)"
+		beginCaptures:
+			1: name: "storage.type.$1-assignment.mermaid"
+		patterns: [{
+			begin: "(?<=link)\\G"
+			end:   "(?=\\s*$)"
+			patterns: [{
+				# Recipient class's name
+				name:  "entity.name.tag.node.mermaid"
+				begin: "\\G\\s+((?=[a-zA-Z])\\w+)"
+				end:   '\\s+("[^"]*")'
+				beginCaptures:
+					1: name: "entity.name.tag.node.mermaid"
+				endCaptures:
+					1: patterns: [include: "source.mermaid.flowchart#url"]
+			}, include: "source.mermaid.flowchart#tooltip"]
+		},{
+			begin: "(?<=callback)\\G"
+			end:   "(?=\\s*$)"
+			patterns: [{
+				# Recipient class's name
+				name:  "entity.name.tag.node.mermaid"
+				begin: "\\G\\s+((?=[a-zA-Z])\\w+)"
+				end:   '\\s+((")[^"]*("))'
+				beginCaptures:
+					1: name: "entity.name.tag.node.mermaid"
+				endCaptures:
+					1: name: "string.quoted.double.callback-name.mermaid"
+					2: name: "punctuation.definition.string.begin.mermaid"
+					3: name: "punctuation.definition.string.end.mermaid"
+			}, include: "source.mermaid.flowchart#tooltip"]
+		}]
+
+
+	# Attribute, method or property field
+	member:
+		patterns: [{
+			# +method(arg1, arg2) returnType
+			name:  "meta.member.method.mermaid"
+			begin: "([-+#~]\\s*|(?![-+#~]))(?!})([^\\s\\(]+)(?=\\()"
+			end:   "(?<=\\))(?:\\s*([*$]))?(?:\\s+(\\S+?)(\\s*~[^~]+~\\s*)?)?(?=$|\\s)"
+			beginCaptures:
+				1: patterns: [include: "#visibility"]
+				2: name: "entity.name.function.member.method.mermaid"
+			endCaptures:
+				1: patterns: [include: "#classifier"]
+				2: name: "storage.type.return-value.mermaid"
+				3: patterns: [include: "#generic"]
+			patterns: [include: "#params"]
+		},{
+			# +type attributeName
+			name:  "meta.member.attribute.mermaid"
+			begin: "([-+#~]\\s*|(?![-+#~]))(?!})([^\\s\\(]+?)(\\s*~[^~]+~\\s*)?(?=$|\\s)"
+			end:   "\\S+|(?=\\s*$)"
+			beginCaptures:
+				1: patterns: [include: "#visibility"]
+				2: name: "storage.type.attribute.mermaid"
+				3: patterns: [include: "#generic"]
+			endCaptures:
+				0: name: "entity.name.member.mermaid"
+		}]
+
+
+	# Piecemeal declaration of class members: “ClassName : +Type attr”
+	"member-statement":
+		applyEndPatternLast: yes
+		name:  "meta.member.statement.mermaid"
+		begin: "^\\s*((?=[a-zA-Z])\\w+)\\s*(:)[ \\t]*"
+		end:   "(?!\\G)"
+		beginCaptures:
+			1: name: "entity.name.type.class.mermaid"
+			2: patterns: [include: "#colon"]
+		patterns: [include: "#member"]
+
+
+	# Function/method parameter list
+	params:
+		name:  "meta.parameters.mermaid"
+		begin: "\\G\\("
+		end:   "\\)"
+		beginCaptures: 0: name: "punctuation.definition.parameters.begin.mermaid"
+		endCaptures:   0: name: "punctuation.definition.parameters.end.mermaid"
+		patterns: [{
+			# Parameter name, optionally preceded by a type
+			match: "(?:([^\\s(),]+?)(\\s*~[^~]+~)?\\s+)?([^\\s(),]+)"
+			captures:
+				1: name: "storage.type.parameter.mermaid"
+				2: patterns: [include: "#generic"]
+				3: name: "variable.function.parameter.mermaid"
+		}, include: "source.mermaid#comma"]
+
+
+	# Class relationship: “classA <-- classB : Optional text”
+	relation:
+		name: "meta.relation.mermaid"
+		begin: """(?x)
+			# First operand
+			(?:
+				((?=[a-zA-Z])\\w+)  # Name
+				(?:\\s+("[^"]*"))?  # Cardinality
+				\\s*
+			)?
+			
+			# Link operator
+			(?:
+				# (Possibly asymmetrical) two-way relation
+				((?:[*o]|<\\|?)(?:--|\\.\\.)(?:[*o]|\\|?>))
+				
+				# One-way relations
+				| (--\\|>     | <\\|--)      # Inheritance
+				| (--\\*      | \\*--)       # Composition
+				| (--o        | o--)         # Aggregation
+				| (-->        | <--)         # Association
+				| (\\.{2}\\|> | <\\|\\.{2})  # Realisation
+				| (\\.{2}>    | <\\.{2})     # Dependency
+				| (\\.{2})                   # Link, dashed
+				| (--)                       # Link, solid
+			)
+			
+			# Second operand
+			(?:
+				\\s*
+				(?:("[^"]*")\\s+)?  # Cardinality
+				((?=[a-zA-Z])\\w+)  # Name
+			)?
+		"""
+		end: "(?!\\G)"
+		beginCaptures:
+			1:  name: "entity.name.type.class.first.mermaid"
+			2:  patterns: [include: "#cardinality"]
+			3:  name: "keyword.operator.relation.two-way.mermaid"
+			4:  name: "keyword.operator.relation.inheritance.mermaid"
+			5:  name: "keyword.operator.relation.composition.mermaid"
+			6:  name: "keyword.operator.relation.aggregation.mermaid"
+			7:  name: "keyword.operator.relation.association.mermaid"
+			8:  name: "keyword.operator.relation.link.solid.mermaid"
+			9:  name: "keyword.operator.relation.realisation.mermaid"
+			10: name: "keyword.operator.relation.dependency.mermaid"
+			11: name: "keyword.operator.relation.link.dashed.mermaid"
+			12: patterns: [include: "#cardinality"]
+			13: name: "entity.name.type.class.second.mermaid"
+		patterns: [{
+			# Optional label
+			name:  "meta.label.mermaid"
+			begin: "\\G\\s*(:)[ \\t]*"
+			end:   "(?=\\s*$)"
+			beginCaptures:
+				1: patterns: [include: "#colon"]
+			contentName: "string.unquoted.relation-text.mermaid"
+		}]
+
+
+	# Optional visibility prefix
+	visibility:
+		patterns: [{
+			# Public: +
+			name: "storage.modifier.visibility.public.mermaid"
+			match: "\\+"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		},{
+			# Private: -
+			name: "storage.modifier.visibility.private.mermaid"
+			match: "-"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		},{
+			# Protected: #
+			name: "storage.modifier.visibility.protected.mermaid"
+			match: "#"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		},{
+			# Package/internal: ~
+			name: "storage.modifier.visibility.internal.mermaid"
+			match: "~"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		}]

@@ -1,3 +1,4 @@
+# Sequence diagram: https://mermaid-js.github.io/mermaid/#/sequenceDiagram
 hideFromUser: yes
 scopeName: "source.mermaid.sequence-diagram"
 patterns: [include: "#main"]

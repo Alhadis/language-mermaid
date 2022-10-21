@@ -11,6 +11,7 @@ repository:
 			{include: "#comment"}
 			{include: "#flowchart"}
 			{include: "#sequence-diagram"}
+			{include: "#class-diagram"}
 		]
 
 
@@ -65,6 +66,16 @@ repository:
 			0: patterns: [include: "text.html.basic"]
 
 
+	# OOP-flavoured class diagram
+	"class-diagram":
+		name:  "meta.class-diagram.mermaid"
+		begin: "^[ \\t]*(classDiagram(?:-v2)?)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.class-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.class-diagram"]
+
+
 	# Comma
 	comma:
 		name: "punctuation.delimiter.comma.mermaid"
@@ -80,6 +91,15 @@ repository:
 		end:   "$"
 		beginCaptures:
 			1: name: "punctuation.definition.comment.mermaid"
+
+
+	# Diagram orientation: “direction …”
+	direction:
+		name:  "meta.direction.statement.mermaid"
+		match: "(?:\\G|^|(?<=\\s|;|%%))(direction)(?:\\s+(BT|LR|RL|TB|TD))?(?=$|\\s|;)"
+		captures:
+			1: name: "storage.type.direction.mermaid"
+			2: name: "constant.language.orientation.diagram.mermaid"
 
 
 	# %%{ "Inline configuration": … }%%

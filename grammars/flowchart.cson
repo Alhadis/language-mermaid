@@ -425,7 +425,7 @@ repository:
 		end:   "(?:\\G|^|(?<=\\s|;|%%))end(?=$|\\s|;)"
 		beginCaptures: 0: name: "keyword.control.subgraph.begin.mermaid"
 		endCaptures:   0: name: "keyword.control.subgraph.end.mermaid"
-		patterns: [{
+		patterns: [
 			# ID of subgraph
 			begin: "\\G\\s+([\\w$&]+)[ \\t]*"
 			end:   "(?!\\G)|(?=[ \\t]*(?:$|;))"
@@ -443,14 +443,10 @@ repository:
 					0: name: "punctuation.definition.string.end.mermaid"
 					1: name: "sublimelinter.gutter-mark.mermaid"
 			}]
-		},{
-			# Subgraph orientation
-			name:  "meta.direction.statement.mermaid"
-			match: "(?:\\G|^|(?<=\\s|;|%%))(direction)(?:\\s+(BT|LR|RL|TB|TD))?(?=$|\\s|;)"
-			captures:
-				1: name: "storage.type.direction.mermaid"
-				2: name: "constant.language.orientation.flowchart.mermaid"
-		}, include: "#main"]
+			
+			{include: "source.mermaid#direction"}
+			{include: "#main"}
+		]
 
 
 	# Tooltip for an interactive element, enclosed in double-quotes

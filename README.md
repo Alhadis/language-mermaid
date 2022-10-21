@@ -10,7 +10,7 @@ Supported graph types
 ---------------------
 * [x] Flowchart
 * [x] Sequence diagram
-* [ ] Class diagram
+* [x] Class diagram
 * [ ] State diagram
 * [ ] Entity relationship diagram
 * [ ] User journey
