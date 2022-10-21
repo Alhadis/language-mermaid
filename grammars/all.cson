@@ -12,6 +12,7 @@ repository:
 			{include: "#flowchart"}
 			{include: "#sequence-diagram"}
 			{include: "#class-diagram"}
+			{include: "#state-diagram"}
 		]
 
 
@@ -66,6 +67,23 @@ repository:
 			0: patterns: [include: "text.html.basic"]
 
 
+	# Curly brackets
+	brace:
+		patterns: [{
+			# Opening brace
+			name: "punctuation.definition.class.block.begin.mermaid"
+			match: "{"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		},{
+			# Closing brace
+			name: "punctuation.definition.class.block.end.mermaid"
+			match: "}"
+			captures:
+				0: name: "sublimelinter.gutter-mark"
+		}]
+
+
 	# OOP-flavoured class diagram
 	"class-diagram":
 		name:  "meta.class-diagram.mermaid"
@@ -74,6 +92,14 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.class-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.class-diagram"]
+
+
+	# Separator character that typically delimits freeform text
+	colon:
+		name: "keyword.operator.assignment.mermaid"
+		match: ":"
+		captures:
+			0: name: "punctuation.separator.message.key-value.mermaid"
 
 
 	# Comma
@@ -155,6 +181,16 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.sequence-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.sequence-diagram"]
+
+
+	# State diagram
+	"state-diagram":
+		name:  "meta.state-diagram.mermaid"
+		begin: "(?i)^[ \\t]*(stateDiagram(?:-v2)?)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.state-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.state-diagram"]
 
 
 	# Statement terminator

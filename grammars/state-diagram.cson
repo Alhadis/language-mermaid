@@ -1,0 +1,141 @@
+# State diagram: https://mermaid-js.github.io/mermaid/#/stateDiagram
+hideFromUser: yes
+scopeName: "source.mermaid.state-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "source.mermaid#direction"}
+			{include: "#terminal"}
+			{include: "#transition"}
+			{include: "#composite-state"}
+			{include: "#note"}
+			{include: "#concurrency"}
+			{include: "#state"}
+		]
+
+
+	# Composite state: “state ID { … }”
+	"composite-state":
+		name:  "meta.state.composite.mermaid"
+		begin: "^\\s*(state)(?:\\s+([^-:\\s{]+))?\\s*({)"
+		end:   "}"
+		beginCaptures:
+			1: name: "storage.type.state.mermaid"
+			2: name: "variable.state.name.mermaid"
+			3: patterns: [include: "source.mermaid#brace"]
+		endCaptures:
+			0: patterns: [include: "source.mermaid#brace"]
+		patterns: [include: "#main"]
+
+
+	# Pair of hyphens that magically denote concurrent activity
+	concurrency:
+		name: "keyword.control.flow.concurrency.mermaid"
+		match: "--"
+
+
+	# Additional annotations that modify behaviour of state descriptions
+	marker:
+		name: "entity.name.tag.modifier.$2.mermaid"
+		match: "((<<))(choice|fork|join)((>>))"
+		captures:
+			1: name: "punctuation.definition.marker.begin.mermaid"
+			2: name: "sublimelinter.gutter-mark"
+			4: name: "punctuation.definition.marker.end.mermaid"
+			5: name: "sublimelinter.gutter-mark"
+
+
+	# “Post-it” note
+	note:
+		name:  "meta.note.mermaid"
+		begin: "^\\s*(note)\\s+((?:left|right)\\s+of)\\s+([^-:\\s{]+)"
+		end:   "(?!\\G)"
+		beginCaptures:
+			1: name: "storage.type.note.mermaid"
+			2: name: "constant.language.note-position.mermaid"
+			3: name: "variable.state.name.mermaid"
+		patterns: [{
+			# Multi-line block format
+			begin: "\\G[ \\t]*$"
+			end:   "^\\s*(end)\\s+(note)(?=$|\\s)"
+			endCaptures:
+				1: name: "keyword.operator.end-note.mermaid"
+				2: name: "storage.type.note.mermaid"
+			contentName: "string.unquoted.note-text.mermaid"
+		},{
+			# Single-line note format
+			begin: "\\G\\s*(:)[ \\t]*"
+			end:   "(?=\\s*$)"
+			beginCaptures:
+				1: patterns: [include: "source.mermaid#colon"]
+			contentName: "string.unquoted.note-text.mermaid"
+		}]
+
+
+	# State description
+	state:
+		patterns: [{
+			# Long-form state description: “state "Description" as ID”
+			name:  "meta.state.statement.mermaid"
+			begin: "^\\s*(state)(?=$|\\s)[ \\t]*"
+			end:   "(?=\\s*$)"
+			beginCaptures:
+				1: name: "storage.type.state.mermaid"
+			patterns: [{
+				# “state "Description" …”
+				name:  "string.quoted.double.state-description.mermaid"
+				begin: '\\G"'
+				end:   '"'
+				beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+				endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+			},{
+				# Declare-only state description: “state ID”
+				name: "variable.state.name.mermaid"
+				match: "\\G(?:[^-:\\s{%]|%(?!%))++"
+			},{
+				# “… as nodeID”
+				begin: '(?<=")\\s*(as)(?=$|\\s)'
+				end:   "[^-:\\s{]+|(?=\\s*(?:$|%%))"
+				beginCaptures:
+					1: name: "keyword.operator.alias.mermaid"
+				endCaptures:
+					0: name: "variable.state.name.mermaid"
+			}, include: "#marker"]
+		},{
+			# Short-form description: “ID : Description”
+			begin: "([^-:\\s{]+)\\s*(:)[ \\t]*"
+			end:   "(?=\\s*(?:$|%%))"
+			beginCaptures:
+				1: name: "variable.state.name.mermaid"
+				2: patterns: [include: "source.mermaid#colon"]
+			contentName: "string.unquoted.state-description.mermaid"
+		},{
+			# Lone state ID: “ID”
+			name: "variable.state.name.mermaid"
+			match: "[^-:\\s{]+"
+		}]
+
+
+	# Start-point or end-point
+	terminal:
+		patterns: [{
+			# Initial state: “[*] --> …”
+			name: "constant.language.state.initial.mermaid"
+			match: "\\[\\*\\](?=\\s*-->)"
+		},{
+			# Final state: “… --> [*]”
+			match: "(?<=-->)\\s*(\\[\\*\\])"
+			captures:
+				1: name: "constant.language.state.final.mermaid"
+		}]
+
+
+	# Transition arrow
+	transition:
+		match: "-->"
+		name: "keyword.operator.transition.mermaid"

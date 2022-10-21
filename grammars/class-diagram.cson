@@ -55,14 +55,6 @@ repository:
 		]
 
 
-	# Separator character that typically delimits freeform text
-	colon:
-		name: "keyword.operator.assignment.mermaid"
-		match: ":"
-		captures:
-			0: name: "punctuation.separator.message.key-value.mermaid"
-
-
 	# Class description
 	class:
 		patterns: [{
@@ -73,20 +65,18 @@ repository:
 				\\s+ ((?=[a-zA-Z])\\w+)
 				(?:\\s* (~\\w+~))?
 				(?:\\s* (:::) \\s* ([^\\s{}]+))?
-				\\s* (({))
+				\\s* ({)
 			"""
-			end: "(})"
+			end: "}"
 			beginCaptures:
 				1: name: "storage.type.class.mermaid"
 				2: name: "entity.name.type.class.mermaid"
 				3: patterns: [include: "#generic"]
 				4: name: "keyword.operator.css-class.mermaid"
 				5: name: "constant.language.css-class.mermaid"
-				6: name: "punctuation.definition.class.block.begin.mermaid"
-				7: name: "sublimelinter.gutter-mark"
+				6: patterns: [include: "source.mermaid#brace"]
 			endCaptures:
-				0: name: "punctuation.definition.class.block.end.mermaid"
-				1: name: "sublimelinter.gutter-mark"
+				0: patterns: [include: "source.mermaid#brace"]
 			patterns: [
 				{include: "source.mermaid#comment"}
 				{include: "#annotation"}
@@ -217,7 +207,7 @@ repository:
 		end:   "(?!\\G)"
 		beginCaptures:
 			1: name: "entity.name.type.class.mermaid"
-			2: patterns: [include: "#colon"]
+			2: patterns: [include: "source.mermaid#colon"]
 		patterns: [include: "#member"]
 
 
@@ -293,7 +283,7 @@ repository:
 			begin: "\\G\\s*(:)[ \\t]*"
 			end:   "(?=\\s*$)"
 			beginCaptures:
-				1: patterns: [include: "#colon"]
+				1: patterns: [include: "source.mermaid#colon"]
 			contentName: "string.unquoted.relation-text.mermaid"
 		}]
 

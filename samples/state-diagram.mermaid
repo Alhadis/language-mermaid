@@ -1,0 +1,86 @@
+stateDiagram-v2
+	%% State/transitions
+	[*]   --> First
+	First --> Second
+	First --> Third
+	Third --> [*]
+
+	%% State descriptions
+	s1
+	state "This is a state description" as s1
+	s2 : This is a state description
+
+	%% Composite states
+	state First {
+		[*] --> one
+		one --> [*]
+	}
+	state Second {
+		[*] --> two
+		two --> [*]
+	}
+	state Third {
+		[*] --> tri
+		tri --> [*]
+	}
+
+	state First {
+		[*] --> Second
+
+		state Second {
+			[*] --> second
+			second --> Third
+
+			state Third {
+				[*] --> third
+				third --> [*]
+			}
+		}
+	}
+
+
+	%% Choice
+	state if_state <<choice>>
+	[*] --> IsPositive
+	IsPositive --> if_state
+	if_state --> False : if n < 0
+	if_state --> True  : if n >= 0
+
+
+	%% Fork
+	state fork_state <<fork>>
+	[*] --> fork_state
+	fork_state --> State2
+	fork_state --> State3
+
+	state join_state <<join>>
+	State2 --> join_state
+	State3 --> join_state
+	join_state --> State4
+	State4 --> [*]
+
+	%% Notes
+	State1: The state with a note
+	note right of State1
+		Important information! You can write
+		(multi-line?) notes.
+	end note
+	State1 --> State2
+	note left of State2 : This is the note to the left.
+
+	%% Concurrency, comments, and other shite
+	[*] --> Active
+	state Active {
+		[*] --> NumLockOff
+		%% Comment
+		NumLockOff --> NumLockOn : EvNumLockPressed %% Comment
+		NumLockOn --> NumLockOff : EvNumLockPressed
+		--
+		[*] --> CapsLockOff
+		CapsLockOff --> CapsLockOn : EvCapsLockPressed
+		CapsLockOn --> CapsLockOff : EvCapsLockPressed
+		--
+		[*] --> ScrollLockOff
+		ScrollLockOff --> ScrollLockOn : EvScrollLockPressed
+		ScrollLockOn --> ScrollLockOff : EvScrollLockPressed
+	}
