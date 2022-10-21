@@ -1,3 +1,50 @@
 ".source.mermaid":
 	editor:
 		commentStart: "%% "
+		increaseIndentPattern: """(?x)
+			(?:^|\\s|;)
+			( flowchart(?:-v2)?
+			| graph
+			| sequenceDiagram
+			) (?=$|\\s)(?!.*;[ \\t]*\\S)
+		"""
+		decreaseIndentPattern: """(?x)
+			(?:^|\\s|;)
+			(end)
+			(?=$|\\s)
+		"""
+
+".source.mermaid .meta.flowchart":
+	editor:
+		increaseIndentPattern: """(?x)
+			(?:^|\\s|;)
+			( flowchart(?:-v2)?
+			| graph
+			| subgraph
+			) (?=$|\\s)(?!.*;[ \\t]*\\S)
+		"""
+
+".source.mermaid .meta.sequence-diagram":
+	editor:
+		increaseIndentPattern: """(?ix)
+			(?:^|\\s|;)
+			( break
+			| critical
+			| loop
+			| opt
+			| par
+			| rect
+			| sequenceDiagram
+			) (?=$|\\s)(?!.*;[ \\t]*\\S)
+		"""
+		decreaseIndentPattern: """(?ix)
+			(?:^|\\s|;)
+			(?:
+				end (?=$|\\s)
+				|
+				( and
+				| else
+				| option
+				) (?=$|\\s)(?!.*;[ \\t]*\\S)
+			)
+		"""
