@@ -1,0 +1,109 @@
+# Entity relationship (ER) diagram: https://mermaid-js.github.io/mermaid/#/entityRelationshipDiagram
+hideFromUser: yes
+scopeName: "source.mermaid.er-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#attributes"}
+			{include: "#relationship"}
+		]
+
+
+	# Attribute definition: “type name key "comment"”
+	attribute:
+		name:  "meta.attribute.mermaid"
+		match: """(?x)
+			((?=[a-zA-Z])[-\\w]+) # Attribute type
+			\\s+
+			((?=[a-zA-Z])[-\\w]+) # Attribute name
+			(?:\\s+ (PK|FK))?     # Primary/foreign key
+			(?:\\s* ("[^"]*"))?   # Comment
+		"""
+		captures:
+			1: name: "storage.type.attribute.mermaid"
+			2: name: "entity.name.attribute.mermaid"
+			3: name: "constant.language.other.key-type.mermaid"
+			4: patterns: [include: "#string"]
+
+
+	# Attribute definitions block
+	attributes:
+		name:  "meta.attributes.mermaid"
+		begin: "((?=[a-zA-Z])[-\\w]+)\\s*({)"
+		end:   "}"
+		beginCaptures:
+			1: name: "entity.name.assignee.mermaid"
+			2: patterns: [include: "source.mermaid#brace"]
+		endCaptures:
+			0: patterns: [include: "source.mermaid#brace"]
+		patterns: [
+			{include: "#attribute"}
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+		]
+
+
+	# Relationship statement: “entity1 relationship entity2 : label”
+	relationship:
+		name: "meta.relationship.mermaid"
+		match: """(?x)
+			((?=[a-zA-Z])[-\\w]+) # Entity 1
+			
+			(?:
+				\\s*
+				# Cardinality configuration thingie
+				(
+					# Entity 1's cardinality
+					(?: \\|o   # Zero or one
+					|   \\|\\| # Exactly one
+					|   }o     # Zero or more
+					|   }\\|   # One or more
+					)
+					
+					# Stroke style
+					(?: --     # Solid
+					| \\.\\.   # Dashed
+					)
+					
+					# Entity 2's cardinality
+					(?: o\\|   # Zero or one
+					| \\|\\|   # Exactly one
+					| o{       # Zero or more
+					| \\|{     # One or more
+					)
+				)
+				\\s*
+				((?=[a-zA-Z])[-\\w]+) # Entity 2
+				
+				# Relationship label
+				\\s* (:) \\s*
+				(?: ("[^"]*")             # Quoted
+				|   ((?=[a-zA-Z])[-\\w]+) # Unquoted
+				|   ((?:[^\\s%]|%(?!%))+) # Invalid
+				)?
+			)?
+		"""
+		captures:
+			1: name: "entity.name.operand.first.mermaid"
+			2: name: "keyword.operator.cardinality.mermaid"
+			3: name: "entity.name.operand.second.mermaid"
+			4: patterns: [include: "source.mermaid#colon"]
+			5: patterns: [include: "#string"]
+			6: name: "string.unquoted.label-text.mermaid"
+			7: name: "invalid.illegal.unexpected-characters.mermaid"
+
+
+	# Double-quoted string
+	string:
+		name:  "string.quoted.double.label-text.mermaid"
+		begin: '"'
+		end:   '"'
+		beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+		endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+		patterns: [include: "source.mermaid#entity"]

@@ -3,7 +3,9 @@
 		commentStart: "%% "
 		increaseIndentPattern: """(?x)
 			(?:^|\\s|;)
-			( classDiagram (?:-v2)?
+			( {
+			| classDiagram (?:-v2)?
+			| erDiagram
 			| flowchart    (?:-v2)?
 			| graph
 			| sequenceDiagram
@@ -12,7 +14,7 @@
 		"""
 		decreaseIndentPattern: """(?x)
 			(?:^|\\s|;)
-			(end)
+			(}|end)
 			(?=$|\\s)
 		"""
 

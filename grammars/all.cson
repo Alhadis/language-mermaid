@@ -13,6 +13,7 @@ repository:
 			{include: "#sequence-diagram"}
 			{include: "#class-diagram"}
 			{include: "#state-diagram"}
+			{include: "#er-diagram"}
 		]
 
 
@@ -137,6 +138,16 @@ repository:
 		endCaptures:   0: name: "punctuation.definition.directive.end.mermaid"
 		contentName: "source.embedded.js"
 		patterns: [include: "source.js"]
+
+
+	# Entity relationship diagram
+	"er-diagram":
+		name:  "meta.er-diagram.mermaid"
+		begin: "^[ \\t]*(erDiagram)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.er-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.er-diagram"]
 
 
 	# Character entity

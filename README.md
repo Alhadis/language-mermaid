@@ -12,7 +12,7 @@ Supported graph types
 * [x] Sequence diagram
 * [x] Class diagram
 * [x] State diagram
-* [ ] Entity relationship diagram
+* [x] Entity relationship diagram
 * [ ] User journey
 * [ ] Gantt
 * [ ] Pie chart
