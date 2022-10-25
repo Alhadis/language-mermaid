@@ -3,12 +3,10 @@ Mermaid language support for Atom
 
 Syntax highlighting for [Mermaid][1] diagrams.
 
-Currently in-development; intended to address [`github/linguist#5578`][2].
-
 
 Installing in Atom
 ------------------
-You'll need [Git][3], because this won't ever appear in Atom's package registry:
+You'll need [Git][2], because this won't ever appear in Atom's package registry:
 
 ~~~shell
 # On Unix-like platforms
@@ -24,5 +22,4 @@ git clone "https://github.com/Alhadis/language-mermaid.git"
 
 <!-- Referenced Links --------------------------------------------------------->
 [1]: https://github.com/mermaid-js/mermaid
-[2]: https://github.com/github/linguist/issues/5578
-[3]: https://git-scm.com/downloads
+[2]: https://git-scm.com/downloads
