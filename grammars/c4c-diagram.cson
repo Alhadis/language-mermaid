@@ -1,0 +1,17 @@
+# C4C diagram:
+# - https://mermaid-js.github.io/mermaid/#/c4c
+# - https://github.com/plantuml-stdlib/C4-PlantUML/blob/8352115/README.md
+hideFromUser: yes
+scopeName: "source.mermaid.c4c-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "source.mermaid#direction"}
+			{include: "source.mermaid.user-journey#title"}
+			{include: "source.wsd"}
+		]

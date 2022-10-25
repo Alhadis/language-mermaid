@@ -4,6 +4,7 @@
 		increaseIndentPattern: """(?x)
 			(?:^|\\s|;)
 			( {
+			| C4(?:Component|Container|Context|Deployment|Dynamic)
 			| classDiagram (?:-v2)?
 			| erDiagram
 			| flowchart    (?:-v2)?

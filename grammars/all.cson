@@ -19,6 +19,7 @@ repository:
 			{include: "#pie-chart"}
 			{include: "#requirement-diagram"}
 			{include: "#gitgraph"}
+			{include: "#c4c-diagram"}
 		]
 
 
@@ -88,6 +89,16 @@ repository:
 			captures:
 				0: name: "sublimelinter.gutter-mark"
 		}]
+
+
+	# C4C diagram
+	"c4c-diagram":
+		name:  "meta.c4c-diagram.c4-${2:/downcase}.mermaid"
+		begin: "^[ \\t]*(C4(Component|Container|Context|Deployment|Dynamic))(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.c4c-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.c4c-diagram"]
 
 
 	# OOP-flavoured class diagram

@@ -18,7 +18,7 @@ Supported graph types
 * [x] Pie chart
 * [x] Requirement diagram
 * [x] Gitgraph
-* [ ] C4C diagram
+* [x] C4C diagram
 
 
 Installing in Atom
