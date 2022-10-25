@@ -8,6 +8,7 @@
 			| erDiagram
 			| flowchart    (?:-v2)?
 			| graph
+			| journey
 			| sequenceDiagram
 			| stateDiagram (?:-v2)?
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)
@@ -57,3 +58,8 @@
 	editor:
 		increaseIndentPattern: "(?:^|\\s|;)(stateDiagram(?:-v2)?|{|note(?=$|\\s)[^:]*$)"
 		decreaseIndentPattern: "(?:^|\\s|;)(?:end\\s+note(?:$|\\s)|})"
+
+".source.mermaid .meta.user-journey":
+	editor:
+		increaseIndentPattern: "(?i)^[ \\t]*(?:section|journey)(?=$|\\s)"
+		decreaseIndentPattern: "(?i)^[ \\t]*(?:section)(?=$|\\s)"

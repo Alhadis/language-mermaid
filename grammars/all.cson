@@ -14,6 +14,7 @@ repository:
 			{include: "#class-diagram"}
 			{include: "#state-diagram"}
 			{include: "#er-diagram"}
+			{include: "#user-journey"}
 		]
 
 
@@ -210,3 +211,13 @@ repository:
 		match: ";"
 		captures:
 			0: name: "sublimelinter.gutter-mark.mermaid"
+
+
+	# Timeline of annotated tasks
+	"user-journey":
+		name:  "meta.user-journey.mermaid"
+		begin: "(?i)^[ \\t]*(journey)(?=$|\\s)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.user-journey.begin.mermaid"
+		patterns: [include: "source.mermaid.user-journey"]
