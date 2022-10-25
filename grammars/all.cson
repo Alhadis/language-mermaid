@@ -16,6 +16,7 @@ repository:
 			{include: "#er-diagram"}
 			{include: "#user-journey"}
 			{include: "#gantt"}
+			{include: "#pie-chart"}
 		]
 
 
@@ -204,6 +205,16 @@ repository:
 			captures:
 				0: patterns: [include: "source.css#rule-list-innards"]
 		}, include: "#comma"]
+
+
+	# Pie chart
+	"pie-chart":
+		name:  "meta.pie-chart.mermaid"
+		begin: "(?i)^[ \\t]*(pie)(?=$|\\s)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.pie-chart.begin.mermaid"
+		patterns: [include: "source.mermaid.pie-chart"]
 
 
 	# Sequence diagram

@@ -15,7 +15,7 @@ Supported graph types
 * [x] Entity relationship diagram
 * [x] User journey
 * [x] Gantt
-* [ ] Pie chart
+* [x] Pie chart
 * [ ] Requirement diagram
 * [ ] Gitgraph
 * [ ] C4C diagram

@@ -1,0 +1,46 @@
+# Pie chart: https://mermaid-js.github.io/mermaid/#/pie
+hideFromUser: yes
+scopeName: "source.mermaid.pie-chart"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#show-data"}
+			{include: "#title"}
+			{include: "#slice"}
+		]
+
+
+	# Flag which enables the display of raw values in chart's legend
+	"show-data":
+		match: "(?i)(?:\\G|(?<=pie))\\s+(showData)(?=$|\\s)"
+		captures:
+			1: name: "keyword.operator.show-data.mermaid"
+
+
+	# Data set: “"key": 0.0072992700729927005”
+	slice:
+		name: "meta.data-set.mermaid"
+		match: '^\\s*((")([^"]*)("))\\s*(:)[ \\t]*(?:([-+]?\\d+(?:\\.\\d+)?))?'
+		captures:
+			1: name: "string.quoted.double.data-key.mermaid"
+			2: name: "punctuation.definition.string.begin.mermaid"
+			2: patterns: [include: "source.mermaid#entity"]
+			4: name: "punctuation.definition.string.end.mermaid"
+			5: patterns: [include: "source.mermaid#colon"]
+			6: name: "constant.numeric.decimal.data-value.mermaid"
+
+
+	# Diagram description
+	title:
+		name:  "meta.title.mermaid"
+		begin: "(?i)(?:^|\\G|(?<=\\s))\\s*(title)(?=$|\\s)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "storage.type.title.mermaid"
+		contentName: "string.unquoted.diagram-title.mermaid"
+		patterns: [include: "source.mermaid#entity"]

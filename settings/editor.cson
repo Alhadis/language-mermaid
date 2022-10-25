@@ -10,6 +10,7 @@
 			| gantt
 			| graph
 			| journey
+			| pie
 			| sequenceDiagram
 			| stateDiagram (?:-v2)?
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)
