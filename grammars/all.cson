@@ -1,4 +1,5 @@
 # Grammar's entry-point
+# vim:set noet ts=4 fdm=marker:
 name: "Mermaid"
 scopeName: "source.mermaid"
 fileTypes: ["mmd", "mermaid"]
@@ -37,6 +38,8 @@ repository:
 			{include: "#c4c-diagram"}
 		]
 
+
+	# Section 1: Shared/reusable patterns =================================================================================={{{1
 
 	# Accessibility option
 	a11y:
@@ -106,26 +109,6 @@ repository:
 		}]
 
 
-	# C4C diagram
-	"c4c-diagram":
-		name:  "meta.c4c-diagram.c4-${2:/downcase}.mermaid"
-		begin: "^[ \\t]*(C4(Component|Container|Context|Deployment|Dynamic))(?=$|\\s|;)"
-		end:   "(?=A)B"
-		beginCaptures:
-			1: name: "keyword.control.c4c-diagram.begin.mermaid"
-		patterns: [include: "source.mermaid.c4c-diagram"]
-
-
-	# OOP-flavoured class diagram
-	"class-diagram":
-		name:  "meta.class-diagram.mermaid"
-		begin: "^[ \\t]*(classDiagram(?:-v2)?)(?=$|\\s|;)"
-		end:   "(?=A)B"
-		beginCaptures:
-			1: name: "keyword.control.class-diagram.begin.mermaid"
-		patterns: [include: "source.mermaid.class-diagram"]
-
-
 	# Separator character that typically delimits freeform text
 	colon:
 		name: "keyword.operator.assignment.mermaid"
@@ -171,16 +154,6 @@ repository:
 		patterns: [include: "source.js"]
 
 
-	# Entity relationship diagram
-	"er-diagram":
-		name:  "meta.er-diagram.mermaid"
-		begin: "^[ \\t]*(erDiagram)(?=$|\\s|;)"
-		end:   "(?=A)B"
-		beginCaptures:
-			1: name: "keyword.control.er-diagram.begin.mermaid"
-		patterns: [include: "source.mermaid.er-diagram"]
-
-
 	# Character entity
 	entity:
 		patterns: [{
@@ -198,6 +171,56 @@ repository:
 				1: name: "punctuation.definition.entity.begin.mermaid"
 				2: name: "punctuation.definition.entity.end.mermaid"
 		}]
+
+
+	# Comma-delimited list of CSS properties
+	"inline-css":
+		patterns: [{
+			name: "source.embedded.css"
+			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
+			captures:
+				0: patterns: [include: "source.css#rule-list-innards"]
+		}, include: "#comma"]
+
+
+	# Statement terminator
+	terminator:
+		name: "punctuation.terminator.statement.mermaid"
+		match: ";"
+		captures:
+			0: name: "sublimelinter.gutter-mark.mermaid"
+
+
+	# Section 2: Entry points =================================================================================={{{1
+
+	# C4C diagram
+	"c4c-diagram":
+		name:  "meta.c4c-diagram.c4-${2:/downcase}.mermaid"
+		begin: "^[ \\t]*(C4(Component|Container|Context|Deployment|Dynamic))(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.c4c-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.c4c-diagram"]
+
+
+	# OOP-flavoured class diagram
+	"class-diagram":
+		name:  "meta.class-diagram.mermaid"
+		begin: "^[ \\t]*(classDiagram(?:-v2)?)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.class-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.class-diagram"]
+
+
+	# Entity relationship diagram
+	"er-diagram":
+		name:  "meta.er-diagram.mermaid"
+		begin: "^[ \\t]*(erDiagram)(?=$|\\s|;)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.er-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.er-diagram"]
 
 
 	# Flowchart diagram
@@ -235,16 +258,6 @@ repository:
 			2: name: "constant.language.orientation.flowchart.mermaid"
 			3: patterns: [include: "source.mermaid#colon"]
 		patterns: [include: "source.mermaid.gitgraph"]
-
-
-	# Comma-delimited list of CSS properties
-	"inline-css":
-		patterns: [{
-			name: "source.embedded.css"
-			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
-			captures:
-				0: patterns: [include: "source.css#rule-list-innards"]
-		}, include: "#comma"]
 
 
 	# Pie chart
@@ -285,14 +298,6 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.state-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.state-diagram"]
-
-
-	# Statement terminator
-	terminator:
-		name: "punctuation.terminator.statement.mermaid"
-		match: ";"
-		captures:
-			0: name: "sublimelinter.gutter-mark.mermaid"
 
 
 	# Timeline of annotated tasks
