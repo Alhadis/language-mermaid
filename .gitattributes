@@ -1,3 +1,9 @@
 # Fix language classification on GitHub.com
 /samples/* linguist-documentation
 *.cson     linguist-detectable
+
+# Exclude unnecessary files from distribution
+/samples        export-ignore
+/.editorconfig  export-ignore
+/.gitattributes export-ignore
+/.gitignore     export-ignore
