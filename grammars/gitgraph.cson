@@ -83,7 +83,7 @@ repository:
 		name:  "string.quoted.double.mermaid"
 		begin: '(?:^|\\G|(?<=\\s))"'
 		end:   '(")|([^"\\r\\n]*)$'
-		beforeCaptures:
+		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 		endCaptures:
 			1: name: "punctuation.definition.string.end.mermaid"
