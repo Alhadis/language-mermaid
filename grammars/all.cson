@@ -3,6 +3,7 @@
 name: "Mermaid"
 scopeName: "source.mermaid"
 fileTypes: ["mmd", "mermaid"]
+injectionSelector: "source.embedded.mermaid"
 patterns: [include: "#main"]
 firstLineMatch: """(?x)
 	# Emacs modeline
@@ -197,7 +198,7 @@ repository:
 	"c4c-diagram":
 		name:  "meta.c4c-diagram.c4-${2:/downcase}.mermaid"
 		begin: "^[ \\t]*(C4(Component|Container|Context|Deployment|Dynamic))(?=$|\\s|;)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.c4c-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.c4c-diagram"]
@@ -207,7 +208,7 @@ repository:
 	"class-diagram":
 		name:  "meta.class-diagram.mermaid"
 		begin: "^[ \\t]*(classDiagram(?:-v2)?)(?=$|\\s|;)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.class-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.class-diagram"]
@@ -217,7 +218,7 @@ repository:
 	"er-diagram":
 		name:  "meta.er-diagram.mermaid"
 		begin: "^[ \\t]*(erDiagram)(?=$|\\s|;)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.er-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.er-diagram"]
@@ -227,7 +228,7 @@ repository:
 	flowchart:
 		name:  "meta.flowchart.mermaid"
 		begin: "^[ \\t]*(flowchart(?:-v2)?|graph)(?!-)\\b"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.flowchart.begin.mermaid"
 		patterns: [{
@@ -242,7 +243,7 @@ repository:
 	gantt:
 		name:  "meta.gantt-chart.mermaid"
 		begin: "(?i)^[ \\t]*(gantt)(?=$|\\s)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.gantt-chart.begin.mermaid"
 		patterns: [include: "source.mermaid.gantt"]
@@ -252,7 +253,7 @@ repository:
 	gitgraph:
 		name:  "meta.gitgraph.mermaid"
 		begin: "(?i)^[ \\t]*(gitGraph)(?:\\s+(LR|BT))?(?:\\s*(:))?(?=$|\\s)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.gitgraph.begin.mermaid"
 			2: name: "constant.language.orientation.flowchart.mermaid"
@@ -264,7 +265,7 @@ repository:
 	"pie-chart":
 		name:  "meta.pie-chart.mermaid"
 		begin: "(?i)^[ \\t]*(pie)(?=$|\\s)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.pie-chart.begin.mermaid"
 		patterns: [include: "source.mermaid.pie-chart"]
@@ -274,7 +275,7 @@ repository:
 	"requirement-diagram":
 		name:  "meta.requirement-diagram.mermaid"
 		begin: "(?i)^[ \\t]*(requirementDiagram)(?=$|\\s)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.requirement-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.requirement-diagram"]
@@ -284,7 +285,7 @@ repository:
 	"sequence-diagram":
 		name:  "meta.sequence-diagram.mermaid"
 		begin: "(?i)^[ \\t]*(sequenceDiagram)(?=$|\\s|;)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.sequence-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.sequence-diagram"]
@@ -294,7 +295,7 @@ repository:
 	"state-diagram":
 		name:  "meta.state-diagram.mermaid"
 		begin: "(?i)^[ \\t]*(stateDiagram(?:-v2)?)(?=$|\\s|;)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.state-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.state-diagram"]
@@ -304,7 +305,7 @@ repository:
 	"user-journey":
 		name:  "meta.user-journey.mermaid"
 		begin: "(?i)^[ \\t]*(journey)(?=$|\\s)"
-		end:   "(?=A)B"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "keyword.control.user-journey.begin.mermaid"
 		patterns: [include: "source.mermaid.user-journey"]

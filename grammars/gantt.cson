@@ -88,7 +88,7 @@ repository:
 	section:
 		name:  "meta.section.mermaid"
 		begin: "(?i)^\\s*(section)(?=$|\\s)[ \\t]*"
-		end:   "(?=^\\s*section(?:$|\\s))"
+		end:   "(?=^\\s*section(?:$|\\s))|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
 		beginCaptures:
 			1: name: "storage.type.section.mermaid"
 		patterns: [
