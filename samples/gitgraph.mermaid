@@ -1,0 +1,14 @@
+gitGraph BT:
+	%% Comment
+	options
+		{"key": "value"}
+	end
+	branch name
+	branch name order:0
+	checkout name
+	commit "Initialise repository with project's current status"
+	commit
+	checkout master
+	reset master
+	merge name id: "customID" tag: "customTag" type: REVERSE
+	cherry-pick "foo" "bar"

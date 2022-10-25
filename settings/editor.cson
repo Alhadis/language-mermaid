@@ -8,6 +8,7 @@
 			| erDiagram
 			| flowchart    (?:-v2)?
 			| gantt
+			| gitGraph (?:\\s+(?:LR|BT))? (\\s*:)?
 			| graph
 			| journey
 			| pie
@@ -70,3 +71,8 @@
 ".source.mermaid .meta.gantt-chart":
 	editor:
 		increaseIndentPattern: "(?i)^[ \\t]*(?:gantt)(?=$|\\s)"
+
+".meta.gitgraph.gitgraph .source.embedded.json":
+	editor:
+		increaseIndentPattern: "(?:^|\\s|;)[ \\t]*(?i:gitGraph|options)(?=$|\\s|:)"
+		decreaseIndentPattern: "(?:^|\\s|;)[ \\t]*(?i:end)(?=$|\\s)"

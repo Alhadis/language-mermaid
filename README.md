@@ -17,7 +17,7 @@ Supported graph types
 * [x] Gantt
 * [x] Pie chart
 * [x] Requirement diagram
-* [ ] Gitgraph
+* [x] Gitgraph
 * [ ] C4C diagram
 
 

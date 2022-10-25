@@ -18,6 +18,7 @@ repository:
 			{include: "#gantt"}
 			{include: "#pie-chart"}
 			{include: "#requirement-diagram"}
+			{include: "#gitgraph"}
 		]
 
 
@@ -196,6 +197,18 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.gantt-chart.begin.mermaid"
 		patterns: [include: "source.mermaid.gantt"]
+
+
+	# Gitgraph
+	gitgraph:
+		name:  "meta.gitgraph.mermaid"
+		begin: "(?i)^[ \\t]*(gitGraph)(?:\\s+(LR|BT))?(?:\\s*(:))?(?=$|\\s)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.gitgraph.begin.mermaid"
+			2: name: "constant.language.orientation.flowchart.mermaid"
+			3: patterns: [include: "source.mermaid#colon"]
+		patterns: [include: "source.mermaid.gitgraph"]
 
 
 	# Comma-delimited list of CSS properties
