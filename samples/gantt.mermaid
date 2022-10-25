@@ -1,0 +1,93 @@
+gantt
+	dateFormat  YYYY-MM-DD %% Comment
+	title       Adding Gantt diagram functionality to Mermaid
+	
+	%% `excludes` accepts specific dates in YYYY-MM-DD format, days of
+	%% the week ("sunday") or "weekends", but not the word "weekdays".
+	excludes    weekends
+
+	todayMarker stroke-width:5px,stroke:#0f0,opacity:0.5
+	todayMarker off
+	inclusiveEndDates
+	topAxis
+	
+	section A section
+	Completed task            :done,    des1, 2014-01-06,2014-01-08
+	Active task               :active,  des2, 2014-01-09, 3d
+	Future task               :         des3, after des2, 5d
+	Future task2              :         des4, after des3, 5d
+
+	section Critical tasks
+	Completed task in the critical line :crit, done, 2014-01-06,24h
+	Implement parser and jison          :crit, done, after des1, 2d
+	Create tests for parser             :crit, active, 3d
+	Future task in critical line        :crit, 5d
+	Create tests for renderer           :2d
+	Add to mermaid                      :1d
+	Functionality added                 :milestone, 2014-01-25, 0d
+
+	section Documentation
+	Describe Gantt syntax               :active, a1, after des1, 3d
+	Add gantt diagram to demo page      :after a1  , 20h
+	Add another diagram to demo page    :doc1, after a1  , 48h
+
+	section Last section
+	Describe Gantt syntax               :after doc1, 3d
+	Add gantt diagram to demo page      :20h
+	Add another diagram to demo page    :48h
+
+	section Clickable
+	Visit mermaidjs   : active, cl1, 2014-01-07, 3d
+	Print arguments   : cl2, after cl1, 3d
+	Print task        : cl3, after cl2, 3d
+
+	click cl1 href "https://mermaidjs.github.io/"
+	click cl2 call printArguments("test1", "test2", test3)
+	click cl3 call printTask()
+
+	%% Input date placeholders
+	dateFormat YYYY     %% 2014           – 4-digit year
+	dateFormat YY       %% 14             – 2-digit year
+	dateFormat Q        %% 1..4           – Quarter of year (sets month to first month in quarter)
+	dateFormat M MM     %% 1..12          – Month number
+	dateFormat MMM MMMM %% January..Dec   – Month name in locale set by “moment.locale()”
+	dateFormat D DD     %% 1..31          – Day of month
+	dateFormat Do       %% 1st..31st      – Day of month with ordinal
+	dateFormat DDD DDDD %% 1..365         – Day of year
+	dateFormat X        %% 1410715640.579 – Unix timestamp
+	dateFormat x        %% 1410715640579  – Unix timestamp, milliseconds
+	dateFormat H HH     %% 0..23          – 24-hour time
+	dateFormat h hh     %% 1..12          – 12-hour time used with “a A”.
+	dateFormat a A      %% am pm          – Post or ante meridiem
+	dateFormat m mm     %% 0..59          – Minutes
+	dateFormat s ss     %% 0..59          – Seconds
+	dateFormat S        %% 0..9           – Tenths of a second
+	dateFormat SS       %% 0..99          – Hundreds of a second
+	dateFormat SSS      %% 0..999         – Thousandths of a second
+	dateFormat Z ZZ     %% +12:00         – Offset from UTC as +-HH:mm, +-HHmm, or Z
+
+	%% Output date placeholders (comments unsupported, lol)
+	axisFormat %a %% Abbreviated weekday name
+	axisFormat %A %% Full weekday name
+	axisFormat %b %% Abbreviated month name
+	axisFormat %B %% Full month name
+	axisFormat %c %% Date and time, as "%a %b %e %H:%M:%S %Y"
+	axisFormat %d %% Zero-padded day of the month as a decimal number [01,31]
+	axisFormat %e %% Space-padded day of the month as a decimal number [ 1,31]; equivalent to %_d
+	axisFormat %H %% Hour (24-hour clock) as a decimal number [00,23]
+	axisFormat %I %% Hour (12-hour clock) as a decimal number [01,12]
+	axisFormat %j %% Day of the year as a decimal number [001,366]
+	axisFormat %m %% Month as a decimal number [01,12]
+	axisFormat %M %% Minute as a decimal number [00,59]
+	axisFormat %L %% Milliseconds as a decimal number [000, 999]
+	axisFormat %p %% Either AM or PM
+	axisFormat %S %% Second as a decimal number [00,61]
+	axisFormat %U %% Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]
+	axisFormat %w %% Weekday as a decimal number [0(Sunday),6]
+	axisFormat %W %% Week number of the year (Monday as the first day of the week) as a decimal number [00,53]
+	axisFormat %x %% Date, as "%m/%d/%Y"
+	axisFormat %X %% Time, as "%H:%M:%S"
+	axisFormat %y %% Year without century as a decimal number [00,99]
+	axisFormat %Y %% Year with century as a decimal number
+	axisFormat %Z %% Time zone offset, such as "-0700"
+	axisFormat %% %% A literal "%" character

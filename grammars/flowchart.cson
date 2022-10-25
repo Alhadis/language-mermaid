@@ -409,13 +409,7 @@ repository:
 				}, include: "#comma"]
 				3: name: "keyword.operator.interpolation-type.mermaid"
 				4: name: "support.constant.interpolation-type.mermaid"
-		},{
-			# Comma-delimited list of style components
-			name: "source.embedded.css"
-			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
-			captures:
-				0: patterns: [include: "source.css#rule-list-innards"]
-		}, include: "#comma"]
+		}, include: "source.mermaid#inline-css"]
 
 
 	# Nested graph

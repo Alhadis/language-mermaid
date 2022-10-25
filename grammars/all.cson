@@ -15,6 +15,7 @@ repository:
 			{include: "#state-diagram"}
 			{include: "#er-diagram"}
 			{include: "#user-journey"}
+			{include: "#gantt"}
 		]
 
 
@@ -183,6 +184,26 @@ repository:
 			captures:
 				1: name: "constant.language.orientation.flowchart.mermaid"
 		}, include: "source.mermaid.flowchart"]
+
+
+	# Gantt chart
+	gantt:
+		name:  "meta.gantt-chart.mermaid"
+		begin: "(?i)^[ \\t]*(gantt)(?=$|\\s)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.gantt-chart.begin.mermaid"
+		patterns: [include: "source.mermaid.gantt"]
+
+
+	# Comma-delimited list of CSS properties
+	"inline-css":
+		patterns: [{
+			name: "source.embedded.css"
+			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
+			captures:
+				0: patterns: [include: "source.css#rule-list-innards"]
+		}, include: "#comma"]
 
 
 	# Sequence diagram

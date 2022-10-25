@@ -7,6 +7,7 @@
 			| classDiagram (?:-v2)?
 			| erDiagram
 			| flowchart    (?:-v2)?
+			| gantt
 			| graph
 			| journey
 			| sequenceDiagram
@@ -63,3 +64,7 @@
 	editor:
 		increaseIndentPattern: "(?i)^[ \\t]*(?:section|journey)(?=$|\\s)"
 		decreaseIndentPattern: "(?i)^[ \\t]*(?:section)(?=$|\\s)"
+
+".source.mermaid .meta.gantt-chart":
+	editor:
+		increaseIndentPattern: "(?i)^[ \\t]*(?:gantt)(?=$|\\s)"
