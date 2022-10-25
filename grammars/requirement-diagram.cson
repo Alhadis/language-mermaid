@@ -1,0 +1,233 @@
+# Requirement diagram: https://mermaid-js.github.io/mermaid/#/requirementDiagram
+hideFromUser: yes
+scopeName: "source.mermaid.requirement-diagram"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#requirement"}
+			{include: "#element"}
+			{include: "#relationship"}
+		]
+
+
+	# Element definition: “element name { … }”
+	element:
+		name:  "meta.element.definition.mermaid"
+		begin: '(?i)^\\s*(element)(?:\\s+(?:(\\w[^-{<>=]*?)|((")([^"]*)("))))?\\s*({)'
+		end:   "}"
+		beginCaptures:
+			1: name: "storage.type.element.mermaid"
+			2: name: "entity.name.element.mermaid"
+			3: name: "string.quoted.double.requirement.name.mermaid"
+			4: name: "punctuation.definition.string.begin.mermaid"
+			5: patterns: [include: "source.mermaid#entity"]
+			6: name: "punctuation.definition.string.end.mermaid"
+			7: patterns: [include: "source.mermaid#brace"]
+		endCaptures:
+			0: patterns: [include: "source.mermaid#brace"]
+		patterns: [
+			{include: "#field"}
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+		]
+
+
+	# Fallback for matching generic fields
+	field:
+		name:  "meta.field.${1:/downcase}.mermaid"
+		begin: "(?i)^\\s*(\\w+)\\s*(:)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "variable.assignment.field.mermaid"
+			2: patterns: [include: "source.mermaid#colon"]
+		patterns: [include: "#field-innards"]
+
+
+	# User-defined text
+	"field-innards":
+		patterns: [{
+			# Quoted
+			begin: '\\G\\s*"'
+			end:   '(")(?:\\s*(?!%%)(\\S[^\\r\\n]*))?'
+			contentName: "string.quoted.double.mermaid"
+			beginCaptures:
+				1: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:
+				1: name: "punctuation.definition.string.end.mermaid"
+				2: name: "invalid.illegal.unexpected-junk.mermaid"
+			patterns: [include: "source.mermaid#entity"]
+		},{
+			# Unquoted
+			name: "string.unquoted.mermaid"
+			match: '\\G[^"\\s][^"\\r\\n]*'
+		}]
+
+
+	# Invalid/unsupported field value
+	"invalid-value":
+		name: "invalid.illegal.bad-value.mermaid"
+		match: "\\G\\S[^\\r\\n]*"
+
+
+	# Relationship description
+	relationship:
+		patterns: [{
+			# Source - <Verb> -> Destination
+			name: "meta.relationship.source-to-destination.mermaid"
+			match: """(?x)
+				(\\w[^-{<>=\\r\\n]* | "[^"]*")  \\s* # Source
+				(- \\s* \\w+ \\s* ->)           \\s* # Operator
+				(\\w[^-{<>=\\r\\n]* | "[^"]*")       # Destination
+			"""
+			captures:
+				1: patterns: [include: "#relationship-source"]
+				2: patterns: [include: "#relationship-type"]
+				3: patterns: [include: "#relationship-destination"]
+		},{
+			# Destination <- <Verb> Source
+			name: "meta.relationship.destination-to-source.mermaid"
+			match: """(?x)
+				(\\w[^-{<>=\\r\\n]* | "[^"]*")  \\s* # Destination
+				(<- \\s* \\w+ \\s* -)           \\s* # Operator
+				(\\w[^-{<>=\\r\\n]* | "[^"]*")       # Source
+			"""
+			captures:
+				1: patterns: [include: "#relationship-destination"]
+				2: patterns: [include: "#relationship-type"]
+				3: patterns: [include: "#relationship-source"]
+		}]
+
+
+	# Destination operand
+	"relationship-destination":
+		patterns: [{
+			# Quoted
+			name:  "string.quoted.double.relationship-operand.destination.mermaid"
+			begin: '(?:^|\\G)"'
+			end:   '"'
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+			patterns: [include: "source.mermaid#entity"]
+		},{
+			# Unquoted
+			name: "entity.name.relationship-operand.destination.mermaid"
+			match: "(?:^|\\G)\\w.*"
+		}]
+
+
+	# Source operand
+	"relationship-source":
+		patterns: [{
+			# Quoted
+			name:  "string.quoted.double.relationship-operand.source.mermaid"
+			begin: '(?:^|\\G)"'
+			end:   '"'
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+			patterns: [include: "source.mermaid#entity"]
+		},{
+			# Unquoted
+			name: "entity.name.relationship-operand.source.mermaid"
+			match: "(?:^|\\G)\\w.*"
+		}]
+
+
+	# Verb describing a type of relationship
+	"relationship-type":
+		patterns: [
+			{match: "->", name: "keyword.operator.arrow.left.mermaid"}
+			{match: "<-", name: "keyword.operator.arrow.right.mermaid"}
+			{match: "-",  name: "keyword.operator.dash.mermaid"}
+
+			# Verb describing the type of relationship
+			name: "keyword.operator.relation.${1:/downcase}.mermaid"
+			match: """(?ix)
+				(?:^|\\G|(?<=-|\\s))
+				( contains
+				| copies
+				| derives
+				| refines
+				| satisfies
+				| traces
+				| verifies
+				) (?=$|-|\\s)
+			"""
+
+			# Highlight anything we don't recognise as invalid syntax
+			{match: "\\w+", name: "invalid.illegal.unsupported-type.mermaid"}
+		]
+
+
+	# Requirement definition: “type name { … }”
+	requirement:
+		name: "meta.requirement.definition.mermaid"
+		begin: """(?xi) ^\\s*
+			( functionalRequirement
+			| interfaceRequirement
+			| performanceRequirement
+			| physicalRequirement
+			| designConstraint
+			| requirement
+			)
+			(?:
+				\\s+
+				# Requirement name
+				(?: (\\w[^-{<>=]*?) # Unquoted
+				|   ((")([^"]*)(")) # Quoted
+				)
+			)?
+			\\s* ({)
+		"""
+		end: "}"
+		beginCaptures:
+			1: name: "storage.type.requirement.mermaid"
+			2: name: "entity.name.requirement.mermaid"
+			3: name: "string.quoted.double.requirement.name.mermaid"
+			4: name: "punctuation.definition.string.begin.mermaid"
+			5: patterns: [include: "source.mermaid#entity"]
+			6: name: "punctuation.definition.string.end.mermaid"
+			7: patterns: [include: "source.mermaid#brace"]
+		endCaptures:
+			0: patterns: [include: "source.mermaid#brace"]
+		patterns: [
+			{include: "#risk"}
+			{include: "#verify-method"}
+			{include: "#field"}
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+		]
+
+
+	# Requirement risk level
+	risk:
+		name:  "meta.field.risk.mermaid"
+		begin: "(?i)^\\s*(risk)\\s*(:)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "variable.assignment.field.mermaid"
+			2: patterns: [include: "source.mermaid#colon"]
+		patterns: [{
+			name: "constant.language.risk-level.${1:/downcase}.mermaid"
+			match: "(?i)\\G(Low|Medium|High)(?=\\s*$)"
+		}, include: "#invalid-value"]
+
+
+	# Verification method
+	"verify-method":
+		name:  "meta.field.verify-method.mermaid"
+		begin: "(?i)^\\s*(verifyMethod)\\s*(:)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "variable.assignment.field.mermaid"
+			2: patterns: [include: "source.mermaid#colon"]
+		patterns: [{
+			name: "constant.language.verify-method.${1:/downcase}.mermaid"
+			match: "(?i)\\G(Analysis|Demonstration|Inspection|Test)(?=\\s*$)"
+		}, include: "#invalid-value"]

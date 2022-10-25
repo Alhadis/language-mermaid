@@ -17,6 +17,7 @@ repository:
 			{include: "#user-journey"}
 			{include: "#gantt"}
 			{include: "#pie-chart"}
+			{include: "#requirement-diagram"}
 		]
 
 
@@ -215,6 +216,16 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.pie-chart.begin.mermaid"
 		patterns: [include: "source.mermaid.pie-chart"]
+
+
+	# Visualisation of a dependency graph
+	"requirement-diagram":
+		name:  "meta.requirement-diagram.mermaid"
+		begin: "(?i)^[ \\t]*(requirementDiagram)(?=$|\\s)"
+		end:   "(?=A)B"
+		beginCaptures:
+			1: name: "keyword.control.requirement-diagram.begin.mermaid"
+		patterns: [include: "source.mermaid.requirement-diagram"]
 
 
 	# Sequence diagram

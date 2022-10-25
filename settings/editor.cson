@@ -11,6 +11,7 @@
 			| graph
 			| journey
 			| pie
+			| requirementDiagram
 			| sequenceDiagram
 			| stateDiagram (?:-v2)?
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)
