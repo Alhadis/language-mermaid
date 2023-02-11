@@ -19,3 +19,4 @@ yarn.lock
 
 # Project-specific
 /mermaid
+*.jison
