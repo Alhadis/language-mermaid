@@ -16,7 +16,7 @@
 			| requirementDiagram
 			| sequenceDiagram
 			| stateDiagram (?:-v2)?
-			| (?i:mindmap)
+			| (?i:mindmap|timeline)
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)
 		"""
 		decreaseIndentPattern: """(?x)

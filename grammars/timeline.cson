@@ -1,0 +1,86 @@
+# Timeline: https://mermaid.js.org/syntax/timeline.html
+hideFromUser: yes
+scopeName: "source.mermaid.timeline"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#title"}
+			{include: "#section"}
+			{include: "#period"}
+		]
+
+
+	# Stuff matched inside freeform descriptions
+	"desc-innards":
+		patterns: [
+			{include: "source.mermaid#entity"}
+			{include: "source.mermaid#br"}
+		]
+
+
+	# Description of a timeline event
+	event:
+		patterns: [{
+			# Event names may begin on next line following EOL colon (for some reason)
+			begin: "\\G\\s*(:)\\s*(?=$|%%)"
+			end:   "^\\s*((?:[^:\\r\\n]|:(?!\\s))+)"
+			beginCaptures:
+				1: patterns: [include: "source.mermaid#colon"]
+			endCaptures:
+				0: name: "entity.name.event.mermaid"
+				1: patterns: [include: "#desc-innards"]
+			patterns: [include: "source.mermaid#comment"]
+		},{
+			# : Event description
+			name:  "meta.event.mermaid"
+			begin: "(:)\\s+"
+			end:   "(?=\\s*(?:$|%%)|:(?=\\s))"
+			beginCaptures:
+				1: patterns: [include: "source.mermaid#colon"]
+			contentName: "entity.name.event.mermaid"
+			patterns: [include: "#desc-innards"]
+		}]
+
+
+	# Named time-period; not necessarily numeric or temporal in nature
+	period:
+		begin: "^\\s*((?=\\S)(?:[^:%]|%(?!%))++)"
+		end:   "(?=^\\s*[^#:\\s]+)"
+		beginCaptures:
+			1: name: "entity.name.tag.period.era.mermaid"
+		patterns: [include: "#event"]
+
+
+	# Labelled grouping of time periods
+	section:
+		name:  "meta.section.mermaid"
+		begin: "(?i)^[ \\t]*(section)(?=$|\\s)[ \\t]*"
+		end:   "(?i)(?=^[ \\t]*(?:section|(?:`{3,}|~{3,})\\s*$))"
+		beginCaptures:
+			1: name: "storage.type.section.mermaid"
+		patterns: [
+			# Section description
+			name:  "string.unquoted.section-description.mermaid"
+			begin: "\\G(?=\\S)"
+			end:   "(?=\\s*$)"
+			patterns: [include: "#desc-innards"]
+
+			{include: "#period"}
+			{include: "#main"}
+		]
+
+
+	# Timeline description
+	title:
+		name:  "meta.title.statement.mermaid"
+		begin: "(?i)^[ \\t]*(title)(?=$|\\s)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "storage.type.title.mermaid"
+		contentName: "string.unquoted.timeline-title.mermaid"
+		patterns: [include: "#desc-innards"]

@@ -38,6 +38,7 @@ repository:
 			{include: "#gitgraph"}
 			{include: "#c4c-diagram"}
 			{include: "#mindmap"}
+			{include: "#timeline"}
 		]
 
 
@@ -310,6 +311,16 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.state-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.state-diagram"]
+
+
+	# Timeline
+	timeline:
+		name:  "meta.timeline.mermaid"
+		begin: "(?i)^[ \\t]*(timeline)(?=$|\\s)"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
+		beginCaptures:
+			1: name: "keyword.control.timeline.begin.mermaid"
+		patterns: [include: "source.mermaid.timeline"]
 
 
 	# Timeline of annotated tasks
