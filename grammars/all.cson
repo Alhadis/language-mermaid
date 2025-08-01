@@ -4,7 +4,26 @@ name: "Mermaid"
 scopeName: "source.mermaid"
 fileTypes: ["mmd", "mermaid"]
 injectionSelector: "source.embedded.mermaid"
-patterns: [include: "#main"]
+patterns: [{
+	# YAML front-matter
+	name:  "meta.front-matter.mermaid"
+	begin: "^([ \\t]*)((---))[ \\t]*$"
+	end:   "^\\1((---))(?=[ \\t]*$)"
+	beginCaptures:
+		2: name: "punctuation.section.front-matter.begin.mermaid"
+		3: name: "sublimelinter.gutter-mark"
+	endCaptures:
+		1: name: "punctuation.section.front-matter.end.mermaid"
+		2: name: "sublimelinter.gutter-mark"
+	contentnName: "source.embedded.yaml"
+	patterns: [include: "source.yaml"]
+},{
+	# Remainder of document
+	name:  "meta.file-body.mermaid"
+	begin: "(?<=---)[ \\t]*$|^"
+	end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
+	patterns: [include: "#main"]
+}]
 firstLineMatch: """(?x)
 	# Emacs modeline
 	-\\*-(?i:[ \\t]*(?=[^:;\\s]+[ \\t]*-\\*-)|(?:.*?[ \\t;]|(?<=-\\*-))[ \\t]*mode[ \\t]*:[ \\t]*)
