@@ -54,37 +54,25 @@ flowchart LR
 	box[#34;Double-quoted text#34;]
 	box[#quot;Double-quoted text#quot;]
 	
-	%% Interrupted nodes
-	box[Sharp edges
-	box["Sharp edges
-	round(Round edges
-	round("Round edges
-	diamond{Diamantine node
-	diamond{"Diamantine node
-	ribbon>Weird-ass ribbon-like node
-	ribbon>"Weird-ass ribbon-like node
-	stadium([Stadium-shaped node,] ) unquoted
-	stadium(["Stadium-shaped node",] ) quoted
-	subroutine[[Subroutine node,] ] unquoted
-	subroutine[["Subroutine node",] ] quoted
-	rect[|key:value|VERTEX_WITH_PROPS_START,| ] unquoted
-	rect[|key:value|"VERTEX_WITH_PROPS_START",| ] quoted
-	cylinder[(Cylindrical node,) ] unquoted
-	cylinder[("Cylindrical node",) ] quoted
-	circle((Circular node,) unquoted
-	circle(("Circular node",) quoted
-	double-circle(((Double-edged circle,)) unquoted
-	double-circle((("Double-edged circle",)) quoted
-	hexagon{{Hexagonal node,} unquoted
-	hexagon{{"Hexagonal node",} quoted
-	trapezoid[/Upright trapezoid,\/ ] unquoted
-	trapezoid[/"Upright trapezoid",\/ ] quoted
-	trapezoid[\Inverted trapezoid/\ ], unquoted
-	trapezoid[\"Inverted trapezoid"/\ ], quoted
-	tongue-twister[\Left-facing parallelogram,\/ ] unquoted
-	tongue-twister[\"Left-facing parallelogram",\/ ] quoted
-	tongue-twister[/Right-facing parallelogram,/\ ] unquoted
-	tongue-twister[/"Right-facing parallelogram",/\ ] quoted
+	%% Embedded newlines
+	box[Sharp
+	edges]
+	box["Sharp
+	edges"]
+	round(Round
+	edges)
+	round("Round
+	edges")
+	diamond{Diamantine
+	node}
+	diamond{"Diamantine
+	node"}
+	ribbon>Weird-ass
+	ribbon-like
+	node]
+	ribbon>"Weird-ass
+	ribbon-like
+	node"]
 
 	%% Accessibility options
 	accTitle : Title of graph

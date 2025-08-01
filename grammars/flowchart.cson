@@ -217,14 +217,13 @@ repository:
 	"node-shape-circle":
 		name:  "string.unquoted.node-text.circle.mermaid"
 		begin: "\\G(\\({2})"
-		end:   "((\\){2}))|((?:(?<!\\))\\)(?!\\))|[^\\r\\n)])++)$"
+		end:   "(\\){2})"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -232,14 +231,13 @@ repository:
 	"node-shape-cylinder":
 		name:  "string.unquoted.node-text.cylinder.mermaid"
 		begin: "\\G(\\[\\()"
-		end:   "((\\)\\]))|((?:[^\\r\\n)]|\\)(?!\\]))++)$"
+		end:   "(\\)\\])"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -247,14 +245,13 @@ repository:
 	"node-shape-diamond":
 		name:  "string.unquoted.node-text.diamond.mermaid"
 		begin: "\\G({)"
-		end:   "((}))|([^\\r\\n}]+)$"
+		end:   "(})"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -262,14 +259,13 @@ repository:
 	"node-shape-double-circle":
 		name:  "string.unquoted.node-text.double-circle.mermaid"
 		begin: "\\G(\\({3})"
-		end:   "((\\){3}))|((?:[^\\r\\n)]|(?<!\\)\\))\\))++)$"
+		end:   "(\\){3})"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -277,14 +273,13 @@ repository:
 	"node-shape-ellipse":
 		name:  "string.unquoted.node-text.ellipse.mermaid"
 		begin: "\\G(\\(-)"
-		end:   "((-\\)))|((?:[^-\\r\\n)]|-(?!\\)))++)$"
+		end:   "(-\\))"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -292,14 +287,13 @@ repository:
 	"node-shape-hexagon":
 		name:  "string.unquoted.node-text.hexagon.mermaid"
 		begin: "\\G({{)"
-		end:   "((}}))|((?:[^\\r\\n}]|}(?!}))++)$"
+		end:   "(}})"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -307,14 +301,13 @@ repository:
 	"node-shape-polygon":
 		name:  "string.unquoted.node-text.polygon.mermaid"
 		begin: "\\G(\\[[/\\\\])"
-		end:   "(([\\\\/]\\]))|((?:[^\\r\\n\\]]|(?<![\\\\/])\\])++)$"
+		end:   "([\\\\/]\\])"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -323,7 +316,7 @@ repository:
 	"node-shape-rectangle-with-props":
 		name:  "string.unquoted.node-text.rectangle-with-props.mermaid"
 		begin: "\\G((\\[\\|))([A-Za-z]+)((:))([A-Za-z]+)((\\|))(?!\\])"
-		end:   "((\\|\\]))|((?:[^\\r\\n\\]]|(?<!\\|)\\])++)$"
+		end:   "(\\|\\])"
 		beginCaptures:
 			1: name: "punctuation.definition.string.begin.mermaid"
 			2: name: "sublimelinter.gutter-mark.mermaid"
@@ -334,9 +327,8 @@ repository:
 			7: name: "punctuation.separator.pipe.mermaid"
 			8: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -344,14 +336,13 @@ repository:
 	"node-shape-ribbon":
 		name:  "string.unquoted.node-text.ribbon.mermaid"
 		begin: "\\G(>)"
-		end:   "((\\]))|([^\\r\\n\\]]+)$"
+		end:   "(\\])"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -359,14 +350,13 @@ repository:
 	"node-shape-round":
 		name:  "string.unquoted.node-text.round.mermaid"
 		begin: "\\G(\\()"
-		end:   "((\\)))|([^\\r\\n)]+)$"
+		end:   "(\\))"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -374,14 +364,13 @@ repository:
 	"node-shape-square":
 		name:  "string.unquoted.node-text.square.mermaid"
 		begin: "\\G(\\[)"
-		end:   "((\\]))|([^\\r\\n\\]]+)$"
+		end:   "(\\])"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -389,14 +378,13 @@ repository:
 	"node-shape-stadium":
 		name:  "string.unquoted.node-text.stadium.mermaid"
 		begin: "\\G(\\(\\[)"
-		end:   "((\\]\\)))|((?:[^\\r\\n)]|(?<!\\])\\))++)$"
+		end:   "(\\]\\))"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -404,14 +392,13 @@ repository:
 	"node-shape-subroutine":
 		name:  "string.unquoted.node-text.subroutine.mermaid"
 		begin: "\\G(\\[\\[)"
-		end:   "((\\]\\]))|((?:[^\\r\\n\\]]|(?<!\\])\\])++)$"
+		end:   "(\\]\\])"
 		beginCaptures:
 			0: name: "punctuation.definition.string.begin.mermaid"
 			1: name: "sublimelinter.gutter-mark.mermaid"
 		endCaptures:
-			1: name: "punctuation.definition.string.end.mermaid"
-			2: name: "sublimelinter.gutter-mark.mermaid"
-			3: patterns: [include: "#unclosed-string"]
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "sublimelinter.gutter-mark.mermaid"
 		patterns: [include: "#node-innards"]
 
 
@@ -421,23 +408,17 @@ repository:
 			# "Double-quoted label"
 			name:  "string.quoted.double.mermaid"
 			begin: '\\G"'
-			end:   '(")|([^"]+)$'
-			beginCaptures:
-				0: name: "punctuation.definition.string.begin.mermaid"
-			endCaptures:
-				1: name: "punctuation.definition.string.end.mermaid"
-				2: patterns: [include: "#unclosed-string"]
+			end:   '"'
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
 			patterns: [include: "#html"]
 		},{
 			# 'Single-quoted label'
 			name:  "string.quoted.single.mermaid"
 			begin: "\\G'"
-			end:   "(')|([^']+)$"
-			beginCaptures:
-				0: name: "punctuation.definition.string.begin.mermaid"
-			endCaptures:
-				1: name: "punctuation.definition.string.end.mermaid"
-				2: patterns: [include: "#unclosed-string"]
+			end:   "'"
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
 			patterns: [include: "#html"]
 		}, include: "#html"]
 
@@ -512,14 +493,6 @@ repository:
 		end:   '"'
 		beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
 		endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
-
-
-	# Stuff matched inside an incorrectly-terminated string
-	"unclosed-string":
-		name: "invalid.illegal.unclosed-string.mermaid"
-		match: "(?:^|\\G).+"
-		captures:
-			0: patterns: [include: "#html"]
 
 
 	# Quoted URL
