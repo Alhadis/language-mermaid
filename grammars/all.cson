@@ -34,6 +34,7 @@ repository:
 			{include: "#user-journey"}
 			{include: "#gantt"}
 			{include: "#pie-chart"}
+			{include: "#quad-chart"}
 			{include: "#requirement-diagram"}
 			{include: "#gitgraph"}
 			{include: "#c4c-diagram"}
@@ -182,7 +183,11 @@ repository:
 			name: "source.embedded.css"
 			match: "(?=\\S)(?:[^,;\\r\\n%]|(?<!%)%(?!%))++"
 			captures:
-				0: patterns: [include: "source.css#rule-list-innards"]
+				0: patterns: [{
+					# Non-standard CSS properties
+					name: "support.type.property-name.non-standard.mermaid-only.css"
+					match: "(?i)(?<![\\w-])(stroke-color)(?![\\w-])"
+				}, include: "source.css#rule-list-innards"]
 		}, include: "#comma"]
 
 
@@ -281,6 +286,16 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.pie-chart.begin.mermaid"
 		patterns: [include: "source.mermaid.pie-chart"]
+
+
+	# Quadrant chart
+	"quad-chart":
+		name:  "meta.quad-chart.mermaid"
+		begin: "(?i)^[ \\t]*(quadrantChart)(?=$|\\s)"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
+		beginCaptures:
+			1: name: "keyword.control.quad-chart.begin.mermaid"
+		patterns: [include: "source.mermaid.quad-chart"]
 
 
 	# Visualisation of a dependency graph
