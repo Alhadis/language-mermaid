@@ -59,6 +59,7 @@ repository:
 			{include: "#c4c-diagram"}
 			{include: "#mindmap"}
 			{include: "#timeline"}
+			{include: "#zenuml"}
 		]
 
 
@@ -218,6 +219,17 @@ repository:
 			0: name: "sublimelinter.gutter-mark.mermaid"
 
 
+	# Diagram description
+	title:
+		name:  "meta.title.mermaid"
+		begin: "(?i)(?:^|\\G|(?<=\\s))\\s*(title)(?=$|\\s)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "storage.type.title.mermaid"
+		contentName: "string.unquoted.diagram-title.mermaid"
+		patterns: [include: "#entity"]
+
+
 	# Section 2: Entry points =================================================================================={{{1
 
 	# C4C diagram
@@ -365,3 +377,13 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.user-journey.begin.mermaid"
 		patterns: [include: "source.mermaid.user-journey"]
+
+
+	# ZenUML sequence diagram
+	zenuml:
+		name:  "meta.zenuml.mermaid"
+		begin: "(?i)^[ \\t]*(zenuml)(?=$|\\s)"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
+		beginCaptures:
+			1: name: "keyword.control.zenuml.begin.mermaid"
+		patterns: [include: "source.mermaid.zenuml"]

@@ -1,0 +1,101 @@
+zenuml
+	title Demo
+	@Actor J
+	as
+	John
+	
+	@Actor A
+	as
+	Alice
+
+	// Asynchronous messages
+	A->J.annoyed(): Hello John, how are you?
+	J->A: Unfocussed and irritable, as usual.
+	A->J: Understandable, have a great day.
+
+	// Synchronous messages
+	A.SyncMessage
+	A.SyncMessage()
+	A.SyncMessage(1, with, parameters) {
+		B.nestedSyncMessage()
+	}
+
+	// Creation messages
+	new A1
+	new A2(with, parameters)
+
+	// Reply message
+	Client->A.method() {
+		B.method() {
+			if(condition) {
+				return x1
+				// return early
+				@return
+				A->Client: x11
+			}
+		}
+		return x2
+	}
+	
+	// 1\. Assign a variable from a sync message.
+	a = A.SyncMessage()
+
+	// 1\.1\. Optionally give the variable a type
+	SomeType a = A.SyncMessage()
+
+	// 2\. Use “return” keyword
+	A.SyncMessage() {
+		return result
+	}
+	SomeType a = A.SyncMessage() {
+		return result
+	}
+
+	// 3\. Use “@return” or “@reply” annotator on an async message
+	@return
+	A->B: result
+
+
+	// Loops
+	for(condition)   {}
+	forEach(of list) {}
+	loop(condition)  {}
+	while(condition) {}
+	for     {}
+	forEach {}
+	loop    {}
+	while   {}
+
+
+	// Condtionals
+	Alice->John: Hello John, how are you?
+	if(usual) {
+		John->Alice: The usual.
+	}
+	// Comment
+	else if(annoyed){
+		John->Alice: Piss off.
+	}
+	else{
+		John->Alice: Good, and you?
+	}
+
+	// Optional sequence
+	opt {
+		John->Alice: Thanks for asking.
+	}
+
+	// Parallel statements
+	par {
+		Alice->Bob: Hello guys!
+		Alice->John: Hello guys!
+	}
+
+	try {
+		Consumer->API: Book something
+		API->BookingService: Start booking process
+	} catch {
+		API->Consumer: show failure
+	} finally {
+		API->BookingService: rollback status
+	}

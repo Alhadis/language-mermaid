@@ -9,8 +9,8 @@ repository:
 			{include: "source.mermaid#a11y"}
 			{include: "source.mermaid#directive"}
 			{include: "source.mermaid#comment"}
+			{include: "source.mermaid#title"}
 			{include: "#show-data"}
-			{include: "#title"}
 			{include: "#slice"}
 		]
 
@@ -33,14 +33,3 @@ repository:
 			4: name: "punctuation.definition.string.end.mermaid"
 			5: patterns: [include: "source.mermaid#colon"]
 			6: name: "constant.numeric.decimal.data-value.mermaid"
-
-
-	# Diagram description
-	title:
-		name:  "meta.title.mermaid"
-		begin: "(?i)(?:^|\\G|(?<=\\s))\\s*(title)(?=$|\\s)[ \\t]*"
-		end:   "(?=\\s*$)"
-		beginCaptures:
-			1: name: "storage.type.title.mermaid"
-		contentName: "string.unquoted.diagram-title.mermaid"
-		patterns: [include: "source.mermaid#entity"]

@@ -1,0 +1,278 @@
+# ZenUML sequence diagram: https://mermaid.js.org/syntax/zenuml
+hideFromUser: yes
+scopeName: "source.mermaid.zenuml"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#terminator"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "source.mermaid#title"}
+			{include: "#comment"}
+			{include: "#return"}
+			{include: "#loop"}
+			{include: "#alt"}
+			{include: "#keywordBlock"}
+			{include: "#messages"}
+			{include: "#variable"}
+			{include: "#participant"}
+		]
+
+
+	# Alternative paths/conditional branching
+	alt:
+		name:  "meta.conditional.mermaid"
+		begin: "(?=\\bif(?:$|\\s*[\\({]))"
+		end:   "(?!\\G)(?=\\s*(?!//|(?:if|else)(?:$|[\\s({]))\\S)"
+		applyEndPatternLast: yes
+		patterns: [{
+			name:  "meta.branch.mermaid"
+			begin: "\\b(if|else(?:\\s+if)?)(?=$|[\\s({])"
+			end:   "(?<=})"
+			beginCaptures:
+				1: name: "keyword.control.conditional.mermaid"
+			patterns: [include: "#parameters"]
+		}, include: "#comment"]
+
+
+	# Block of statements enclosed by curly brackets
+	block:
+		name:  "meta.block.mermaid"
+		begin: "{"
+		end:   "}"
+		beginCaptures: 0: patterns: [include: "source.mermaid#brace"]
+		endCaptures:   0: patterns: [include: "source.mermaid#brace"]
+		patterns: [
+			{include: "#block"}
+			{include: "#main"}
+		]
+
+
+	# ZenUML comments are rendered above messages or fragments
+	comment:
+		name:  "comment.line.double-slash.zenuml.mermaid"
+		begin: "(//)[ \\t]*"
+		end:   "(?=\\s*$)"
+		beginCaptures:
+			1: name: "punctuation.definition.comment.mermaid"
+		patterns: [{
+			# Markdown formatting is supported
+			match: "(?:^|\\G)(.+)"
+			captures:
+				1: patterns: [include: "source.gfm"]
+		}]
+
+
+	# Blocks labelled by simple (parameter-less) keywords: “opt {}”
+	keywordBlock:
+		name:  "meta.$1.block.mermaid"
+		begin: "\\b(opt|par|try|catch|finally)(?=\\s*(?:$|{))"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		beginCaptures:
+			1: name: "keyword.control.flow.mermaid"
+		patterns: [
+			{begin: "\\G", end: "(?=\\S)"}
+			{include: "#block"}
+		]
+
+
+	# Loop blocks (NB: keywords are case-sensitive)
+	loop:
+		name:  "meta.loop.mermaid"
+		begin: "\\b(while|for|for[Ee]ach|loop)(?=$|\\s*[\\({])"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		beginCaptures:
+			1: name: "keyword.control.flow.${1:/downcase}.mermaid"
+		patterns: [include: "#parameters"]
+
+
+	# One of four types of messages
+	messages:
+		patterns: [
+			{include: "#messageSync"}
+			{include: "#messageCreation"}
+			{include: "#messageAsync"}
+		]
+
+
+	# Asynchronous message: “From->To: Text”
+	messageAsync:
+		name:  "meta.message.async.mermaid"
+		begin: "\\b(\\w+)(->)(\\w+)\\b\\s*(:)[ \\t]*"
+		end:   "(?=\\s*(?:$|%%|//))"
+		beginCaptures:
+			1: name: "entity.name.tag.participant.sender.mermaid"
+			2: name: "keyword.operator.arrow.message.mermaid"
+			3: name: "entity.name.tag.participant.recipient.mermaid"
+			4: patterns: [include: "source.mermaid#colon"]
+		contentName: "string.unquoted.message-text.mermaid"
+
+
+	# Construction-type message prefixed by “new” keyword
+	messageCreation:
+		name:  "meta.message.creation.mermaid"
+		begin: "\\b(new)\\s+(\\w+)"
+		end:   "(?!\\G)"
+		beginCaptures:
+			1: name: "keyword.operator.message.mermaid"
+			2: name: "entity.name.function.message.mermaid"
+		applyEndPatternLast: yes
+		patterns: [include: "#parameters"]
+
+
+	# Synchronous message: “Alice.someMessage()”
+	messageSync:
+		name:  "meta.message.sync.mermaid"
+		begin: "(?:\\b(\\w+)(->))?\\b(\\w+)(\\.)(\\w+)"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		beginCaptures:
+			1: name: "entity.name.tag.participant.sender.mermaid"
+			2: name: "keyword.operator.arrow.message.mermaid"
+			3: name: "entity.name.tag.participant.sender.mermaid"
+			4: name: "punctuation.delimiter.period.property.mermaid"
+			5: name: "entity.name.function.message.mermaid"
+		patterns: [include: "#parameters"]
+
+
+	# Parenthesised list of message parameters
+	parameters:
+		patterns: [{
+			# Parameter list
+			name:  "meta.arguments.mermaid"
+			begin: "\\G(\\()"
+			end:   "(\\))"
+			beginCaptures:
+				0: name: "punctuation.definition.arguments.begin.mermaid"
+				1: name: "brackethighlighter.round"
+			endCaptures:
+				0: name: "punctuation.definition.arguments.end.mermaid"
+				1: name: "brackethighlighter.round"
+			patterns: [include: "#parameter"]
+		},{
+			# Nested messages, etc
+			begin: "(?<=\\))|\\G"
+			end:   "(?=\\s*[^\\s{])|(?<=})"
+			patterns: [include: "#block"]
+		}]
+
+
+	# Stuff matched inside a message's arguments list
+	parameter:
+		patterns: [
+			name: "variable.parameter.message.function"
+			match: "[^\\s,\\(\\){}]+"
+
+			{include: "source.mermaid#comma"}
+			{include: "#parentheses"}
+		]
+
+
+	# Nested parenthesis pairs
+	parentheses:
+		begin: "(\\()"
+		end:   "(\\))"
+		beginCaptures:
+			0: name: "punctuation.parenthesis.begin.mermaid"
+			1: name: "brackethighlighter.round"
+		endCaptures:
+			0: name: "punctuation.parenthesis.end.mermaid"
+			1: name: "brackethighlighter.round"
+		patterns: [include: "#parameter"]
+
+
+	# Participant declaration
+	participant:
+		# Participant declaration, possibly spanning multiple lines
+		name:  "meta.participant.mermaid"
+		begin: "(?=@\\w+|\\b\\w+\\b)"
+		end:   "(?!\\G)"
+		patterns: [{
+			# @Annotator
+			begin: "(?<=\\s|^|\\G)(@)(\\w+)\\b"
+			end:   "(?<=\\s|^)(?=\\w)"
+			beginCaptures:
+				0: name: "storage.modifier.annotator.${2:/downcase}.mermaid"
+				1: name: "punctuation.definition.annotator.mermaid"
+		},{
+			# Participant name
+			name:  "meta.participant.$1.mermaid"
+			begin: "\\b(\\w+)\\b(?!\\.|->|\\s*=)"
+			end:   "(?=\\s*(?!as(?:$|\\s))\\S)"
+			beginCaptures:
+				0: name: "entity.name.tag.participant.mermaid"
+			patterns: [{
+				# Alias declaration
+				name:  "meta.alias.mermaid"
+				begin: "(?i)(?<=\\s|^)(as)(?=$|\\s)"
+				end:   "(?i)(?=@|(?<=\\s|^)new\\s|\\b\\w+(?:\\.|->|\\s*=))|\\b(\\w+)\\b"
+				beginCaptures:
+					1: name: "keyword.operator.alias.mermaid"
+				endCaptures:
+					1: name: "entity.name.alias.participant.mermaid"
+			}]
+		}]
+
+
+	# Language primitives for returning a reply from a synchronous message
+	return:
+		patterns: [
+			{include: "#returnStatement"}
+			{include: "#returnAnnotator"}
+		]
+
+
+	# Return/reply annotator preceding an async message: “@return A->B: result”
+	returnAnnotator:
+		name:  "meta.return.annotator.mermaid"
+		begin: "(?i)(@)(return|reply)(?=$|\\s)"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		beginCaptures:
+			0: name: "keyword.control.annotator.${2:/downcase}.mermaid"
+			1: name: "punctuation.definition.annotator.mermaid"
+		patterns: [
+			{begin: "\\G", end: "(?=\\S)"}
+			{include: "#messages"}
+		]
+
+
+	# Return statement within a nested message block: “{ return result }”
+	returnStatement:
+		name:  "meta.return.statement.mermaid"
+		begin: "\\breturn(?=$|\\s)"
+		end:   '(?<=")|[^\\s"{}]+'
+		beginCaptures:
+			0: name: "keyword.control.flow.return.mermaid"
+		endCaptures:
+			0: name: "string.unquoted.reply.mermaid"
+		patterns: [{
+			# Double-quoted strings can contain spaces and braces
+			name:  "string.quoted.double.reply.mermaid"
+			begin: '"'
+			end:   '"'
+			beginCaptures: 0: name: "punctuation.definition.string.begin.mermaid"
+			endCaptures:   0: name: "punctuation.definition.string.end.mermaid"
+		}]
+
+
+	# Variable assignment from a sync message: “[type] foo = a.message()”
+	variable:
+		name:  "meta.assignment.mermaid"
+		begin: "\\s*\\b(?:(\\w+)\\s+)?(\\w+)\\s*(=)"
+		end:   "(?!\\G)"
+		applyEndPatternLast: yes
+		beginCaptures:
+			1: name: "entity.name.type.mermaid"
+			2: name: "variable.assignment.mermaid"
+			3: name: "keyword.operator.assignment.mermaid"
+		patterns: [
+			{begin: "\\G", end: "(?=\\S)"}
+			{include: "#messageSync"}
+			{include: "#messageCreation"}
+		]
