@@ -1,0 +1,102 @@
+# Sankey graph:
+# - https://mermaid.js.org/syntax/sankey
+# - https://en.wikipedia.org/wiki/Sankey_diagram
+hideFromUser: yes
+scopeName: "source.mermaid.sankey"
+patterns: [include: "#main"]
+
+repository:
+	main:
+		patterns: [
+			{include: "source.mermaid#a11y"}
+			{include: "source.mermaid#directive"}
+			{include: "source.mermaid#comment"}
+			{include: "#line"}
+		]
+
+
+	# 3-column CSV record: source, target, value
+	line:
+		name:  "meta.record.mermaid"
+		begin: "^\\s*(?=[^\\s,])"
+		end:   "(?=\\s*$)"
+		patterns: [{
+			# First column: Data source
+			name:  "meta.column.1.mermaid"
+			begin: "\\G[ \\t]*"
+			end:   "[ \\t]*((,))"
+			endCaptures:
+				1: name: "punctuation.delimiter.comma.mermaid"
+				2: name: "sublimelinter.gutter-mark"
+			patterns: [{
+				# Quoted
+				name:  "entity.name.tag.source.quoted.mermaid"
+				begin: '\\G(?=")'
+				end:   "(?!\\G)"
+				applyEndPatternLast: yes
+				patterns: [include: "#string"]
+			},{
+				# Unquoted
+				name:  "entity.name.tag.source.unquoted.mermaid"
+				begin: "\\G(?=[^,\\s])"
+				end:   "(?=\\s*(?:,|$))"
+			}]
+		},{
+			begin: "(?<=,)"
+			end:   "(?!\\G)"
+			applyEndPatternLast: yes
+			patterns: [{
+				# Second column: target
+				name:  "meta.column.2.mermaid"
+				begin: "\\G[ \\t]*"
+				end:   "[ \\t]*((,))"
+				endCaptures:
+					1: name: "punctuation.delimiter.comma.mermaid"
+					2: name: "sublimelinter.gutter-mark"
+				patterns: [{
+					# Quoted
+					name:  "entity.name.target.quoted.mermaid"
+					begin: '\\G(?=")'
+					end:   "(?!\\G)"
+					patterns: [include: "#string"]
+				},{
+					# Unquoted
+					name:  "entity.name.target.unquoted.mermaid"
+					begin: "\\G(?=[^,\\s])"
+					end:   "(?=\\s*(?:,|$))"
+				}]
+			},{
+				# Third column: value
+				name:  "meta.column.3.mermaid"
+				begin: "(?<=,)[ \\t]*"
+				end:   "[ \\t]*(?=$|,)"
+				patterns: [{
+					# Quoted
+					name:  "constant.numeric.data.quoted.mermaid"
+					begin: '\\G(?=")'
+					end:   "(?!\\G)"
+					patterns: [include: "#string"]
+				},{
+					# Unquoted
+					name:  "constant.numeric.data.unquoted.mermaid"
+					begin: "\\G(?=[^,\\s])"
+					end:   "(?=\\s*(?:,|$))"
+				}]
+			}]
+		}]
+
+
+	# Stuff matched inside a double-quoted column value
+	string:
+		begin: '\\G(")'
+		end:   '(")(?!")'
+		beginCaptures:
+			0: name: "punctuation.definition.string.begin.mermaid"
+			1: name: "brackethighlighter.quote"
+		endCaptures:
+			0: name: "punctuation.definition.string.end.mermaid"
+			1: name: "brackethighlighter.quote"
+		patterns: [{
+			name: "constant.character.escape.quote.mermaid"
+			match: '""'
+		}]

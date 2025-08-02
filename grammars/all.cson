@@ -60,6 +60,7 @@ repository:
 			{include: "#mindmap"}
 			{include: "#timeline"}
 			{include: "#zenuml"}
+			{include: "#sankey"}
 		]
 
 
@@ -337,6 +338,16 @@ repository:
 		beginCaptures:
 			1: name: "keyword.control.requirement-diagram.begin.mermaid"
 		patterns: [include: "source.mermaid.requirement-diagram"]
+
+
+	# Sankey visualisation
+	sankey:
+		name:  "meta.sankey.mermaid"
+		begin: "(?i)^[ \\t]*(sankey(?:-beta)?)(?=$|\\s|;)"
+		end:   "(?=A)B|(?=^[ \\t]*(?:`{3,}|~{3,})\\s*$)"
+		beginCaptures:
+			1: name: "keyword.control.sankey.begin.mermaid"
+		patterns: [include: "source.mermaid.sankey"]
 
 
 	# Sequence diagram

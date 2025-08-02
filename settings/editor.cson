@@ -74,6 +74,11 @@
 	editor:
 		increaseIndentPattern: "(?i)^[ \\t]*(?:gantt)(?=$|\\s)"
 
+".source.mermaid .meta.sankey":
+	editor:
+		increaseIndentPattern: "(?=A)B"
+		decreaseIndentPattern: "(?=A)B"
+
 ".source.mermaid .meta.zenuml":
 	editor:
 		commentStart: "// "
