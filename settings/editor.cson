@@ -13,10 +13,12 @@
 			| graph
 			| journey
 			| pie
+			| quadrantChart
 			| requirementDiagram
 			| sequenceDiagram
 			| stateDiagram (?:-v2)?
 			| (?i:mindmap|timeline)
+			| zenuml
 			) (?=$|\\s)(?!.*;[ \\t]*\\S)
 		"""
 		decreaseIndentPattern: """(?x)
