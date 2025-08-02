@@ -9,7 +9,7 @@ repository:
 			{include: "source.mermaid#a11y"}
 			{include: "source.mermaid#directive"}
 			{include: "source.mermaid#comment"}
-			{include: "source.mermaid.pie-chart#title"}
+			{include: "source.mermaid#title"}
 			{include: "#axes"}
 			{include: "#quads"}
 			{include: "#class"}

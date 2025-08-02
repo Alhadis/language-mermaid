@@ -135,13 +135,9 @@ repository:
 
 	# Chart description
 	title:
-		name:  "meta.title.statement.mermaid"
-		begin: "(?i)^\\s*(title)(?=$|\\s)[ \\t]*"
-		end:   "(?=\\s*$)"
-		beginCaptures:
-			1: name: "storage.type.title.mermaid"
-		contentName: "string.unquoted.chart-title.mermaid"
-		patterns: [include: "source.mermaid#entity"]
+		begin: "(?i)(?=^\\s*title(?:$|\\s))"
+		end:   "(?!\\G)"
+		patterns: [include: "source.mermaid#title"]
 
 
 	# Styling applied to current-date marker

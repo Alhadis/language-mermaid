@@ -77,10 +77,6 @@ repository:
 
 	# Timeline description
 	title:
-		name:  "meta.title.statement.mermaid"
-		begin: "(?i)^[ \\t]*(title)(?=$|\\s)[ \\t]*"
-		end:   "(?=\\s*$)"
-		beginCaptures:
-			1: name: "storage.type.title.mermaid"
-		contentName: "string.unquoted.timeline-title.mermaid"
-		patterns: [include: "#desc-innards"]
+		begin: "(?i)(?=^\\s*title(?:$|\\s))"
+		end:   "(?!\\G)"
+		patterns: [include: "source.mermaid#title"]
