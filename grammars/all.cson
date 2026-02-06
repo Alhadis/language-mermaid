@@ -43,6 +43,7 @@ firstLineMatch: """(?x)
 repository:
 	main:
 		patterns: [
+			{include: "#info"}
 			{include: "#directive"}
 			{include: "#comment"}
 			{include: "#flowchart"}
@@ -196,6 +197,14 @@ repository:
 				1: name: "punctuation.definition.entity.begin.mermaid"
 				2: name: "punctuation.definition.entity.end.mermaid"
 		}]
+
+
+	# Display Mermaid engine's version
+	info:
+		name: "meta.version-info.statement.github"
+		match: "^\\s*(info)(?=\\s*$)"
+		captures:
+			1: name: "keyword.control.engine-info.github"
 
 
 	# Comma-delimited list of CSS properties
